@@ -5,30 +5,30 @@ networks:
 
 services:
 
-  nginx:
-    image: nginx:1.19-alpine
-    ports:
-      - 80:80
-    volumes:
-      - ./docker/nginx/templates:/etc/nginx/templates
-      - ./.data/logs/nginx:/var/log/nginx
-      - "./:${WORK_DIR}"
-    depends_on:
-      - php
-    #      - mysql-5.7
-    environment:
-      TZ: ${TZ}
-      PUBLIC_DIR: "${WORK_DIR}/public"
-      SERVER_NAME: ${SERVER_NAME}
-      FASTCGI_PASS: php:9000
-      LISTEN: 80
-    networks:
-      - backend
+#  nginx:
+#    image: nginx:1.19-alpine
+#    ports:
+#      - 80:80
+#    volumes:
+#      - ./docker/nginx/templates:/etc/nginx/templates
+#      - ./.data/logs/nginx:/var/log/nginx
+#      - "./:${WORK_DIR}"
+#    depends_on:
+#      - php
+#    #      - mysql-5.7
+#    environment:
+#      TZ: ${TZ}
+#      PUBLIC_DIR: "${WORK_DIR}/public"
+#      SERVER_NAME: ${SERVER_NAME}
+#      FASTCGI_PASS: php:9000
+#      LISTEN: 80
+#    networks:
+#      - backend
 
   php:
     build:
       context: ./docker/php
-      dockerfile: Dockerfile
+      dockerfile: 8.0/Dockerfile
       args:
         TZ: ${TZ}
         WORK_DIR: ${WORK_DIR}
@@ -46,22 +46,22 @@ services:
     networks:
       - backend
 
-
-  mysql-5.7:
-    image: mysql:5.7
-    restart: unless-stopped
-    volumes:
-      - ./.data/mysql/5.7/data:/var/lib/mysql
-      - ./.data/mysql/5.7/conf.d:/etc/mysql/conf.d
-      - ./.data/mysql/5.7/logs:/var/log/mysql
-      - ./.data/mysql/dump:/dump
-    ports:
-      - 4305:3306
-    security_opt:
-      - seccomp:unconfined
-    environment:
-      MYSQL_DATABASE: ${DATABASE_NAME}
-      MYSQL_ROOT_PASSWORD: ${DATABASE_PASS}
-      TZ: ${TZ}
-    networks:
-      - backend
+#
+#  mysql-5.7:
+#    image: mysql:5.7
+#    restart: unless-stopped
+#    volumes:
+#      - ./.data/mysql/5.7/data:/var/lib/mysql
+#      - ./.data/mysql/5.7/conf.d:/etc/mysql/conf.d
+#      - ./.data/mysql/5.7/logs:/var/log/mysql
+#      - ./.data/mysql/dump:/dump
+#    ports:
+#      - 4305:3306
+#    security_opt:
+#      - seccomp:unconfined
+#    environment:
+#      MYSQL_DATABASE: ${DATABASE_NAME}
+#      MYSQL_ROOT_PASSWORD: ${DATABASE_PASS}
+#      TZ: ${TZ}
+#    networks:
+#      - backend

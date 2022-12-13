@@ -1,4 +1,4 @@
-FROM enjoys/php:8.0-fpm-alpine
+FROM enjoys/php:7.3-fpm-alpine
 
 # https://wiki.alpinelinux.org/wiki/Setting_the_timezone
 ARG TZ='UTC'
@@ -8,19 +8,16 @@ RUN echo "${TZ}" && apk --update add tzdata && \
     apk del tzdata
 
 # Copy xdebug configuration for remote debugging
-COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+COPY 7.3/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 # Добавим свой php.ini, можем в нем определять свои значения конфига
-COPY php.ini /usr/local/etc/php/conf.d/40-custom.ini
-COPY mailtodisk /usr/local/bin
+COPY 7.3/php.ini /usr/local/etc/php/conf.d/40-custom.ini
+COPY sendmail /usr/local/bin
 
 ARG USER_NAME="user"
 ARG USER_ID="1000"
 RUN echo ${USER_NAME}:${USER_ID}
 RUN adduser --system ${USER_NAME} --uid ${USER_ID}
-
-
-
 
 ARG WORK_DIR="/var/www"
 WORKDIR ${WORK_DIR}

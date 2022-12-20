@@ -8,10 +8,10 @@ RUN echo "${TZ}" && apk --update add tzdata && \
     apk del tzdata
 
 # Copy xdebug configuration for remote debugging
-COPY 8.2/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 # Добавим свой php.ini, можем в нем определять свои значения конфига
-COPY 8.2/php.ini /usr/local/etc/php/conf.d/40-custom.ini
+COPY php.ini /usr/local/etc/php/conf.d/40-custom.ini
 COPY sendmail /usr/local/bin
 
 ARG USER_NAME="user"

@@ -27,6 +27,7 @@ final class Nginx implements ServiceInterface
     ];
 
     private array $configuration = [
+        'container_name' => 'nginx',
         'image' => 'nginx:1.19-alpine',
         'ports' => [
             '80:80',

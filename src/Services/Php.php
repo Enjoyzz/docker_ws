@@ -23,6 +23,7 @@ final class Php implements ServiceInterface
     ];
 
     protected array $configuration = [
+        'container_name' => 'php',
         'build' => [
             'context' => './docker/php',
             'dockerfile' => 'Dockerfile',

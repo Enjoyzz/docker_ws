@@ -14,8 +14,8 @@ use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
 final class Apache implements ServiceInterface
 {
     private const POSSIBLE_DEPEND_SERVICES = [
-            Php::class,
-            Mysql57::class,
+        Php::class,
+        Mysql57::class,
     ];
 
     public const USED_ENV_KEYS = [
@@ -27,6 +27,7 @@ final class Apache implements ServiceInterface
     private string $name = 'apache-2.4';
 
     private array $configuration = [
+        'container_name' => 'apache',
         'build' => [
             'context' => './docker/apache',
             'dockerfile' => 'Dockerfile'
@@ -76,7 +77,7 @@ final class Apache implements ServiceInterface
         $phpService = DockerCompose::getServiceByKey(Php::class);
         $this->configuration['environment']['FASTCGI_PASS'] = sprintf('%s:9000', $phpService->getName());
 
-        if (empty($this->configuration['depends_on'])){
+        if (empty($this->configuration['depends_on'])) {
             unset($this->configuration['depends_on']);
         }
     }
@@ -84,7 +85,6 @@ final class Apache implements ServiceInterface
     public function after()
     {
         copyDirectoryWithFilesRecursive(__DIR__ . '/../../docker/apache', Variables::$rootPath . '/docker/apache');
-
     }
 
     public function getConfiguration(): array

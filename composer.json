@@ -1,0 +1,17 @@
+{
+    "name": "enjoys/docker_ws",
+    "type": "library",
+    "require": {
+        "symfony/console": "^6.2",
+        "symfony/yaml": "^6.2"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Enjoys\\DockerWs\\": "src/"
+        }
+    },
+    "bin": [
+        "bin/docker"
+    ]
+}

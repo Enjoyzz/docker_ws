@@ -15,11 +15,15 @@ final class Php implements ServiceInterface
 {
     private string $name = 'php';
 
-    public const USED_ENV_KEYS = [
-        'WORK_DIR',
-        'TZ',
-        'USER_NAME',
-        'USER_ID'
+    /**
+     * true - required
+     * false - not required
+     */
+    private const USED_ENV_KEYS = [
+        'WORK_DIR' => false,
+        'TZ' => false,
+        'USER_NAME' => false,
+        'USER_ID' => false
     ];
 
     protected array $configuration = [
@@ -73,6 +77,11 @@ final class Php implements ServiceInterface
     public function getConfiguration(): array
     {
         return $this->configuration;
+    }
+
+    public function getUsedEnvKeys(): array
+    {
+        return self::USED_ENV_KEYS;
     }
 
     /**

@@ -10,9 +10,13 @@ final class Mysql57 implements ServiceInterface
 {
     private string $name = 'mysql-5.7';
 
-    public const USED_ENV_KEYS = [
-        'DATABASE_NAME',
-        'DATABASE_PASS',
+    /**
+     * true - required
+     * false - not required
+     */
+    private const USED_ENV_KEYS = [
+        'DATABASE_NAME' => true,
+        'DATABASE_PASS' => true,
     ];
 
     private array $configuration = [
@@ -58,6 +62,11 @@ final class Mysql57 implements ServiceInterface
     public function getConfiguration(): mixed
     {
         return $this->configuration;
+    }
+
+    public function getUsedEnvKeys(): array
+    {
+        return self::USED_ENV_KEYS;
     }
 
     public function before()

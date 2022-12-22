@@ -74,6 +74,10 @@ final class DockerCompose
     }
 
 
+    /**
+     * @param bool $only_keys
+     * @return string[]|ServiceInterface[]
+     */
     public static function getServices(bool $only_keys = false): array
     {
         return $only_keys ? array_keys(self::$services) : self::$services;

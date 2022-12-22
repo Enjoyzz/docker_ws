@@ -9,7 +9,8 @@ namespace Enjoys\DockerWs\Services;
 final class NullService implements ServiceInterface
 {
     private string $name;
-    public const USED_ENV_KEYS = [];
+
+    private const USED_ENV_KEYS = [];
 
 
     public function __construct(string $name = null)
@@ -40,6 +41,11 @@ final class NullService implements ServiceInterface
     public function getConfiguration()
     {
         return [];
+    }
+
+    public function getUsedEnvKeys(): array
+    {
+        return self::USED_ENV_KEYS;
     }
 
     /**

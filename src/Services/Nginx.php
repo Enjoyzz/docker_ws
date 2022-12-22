@@ -20,10 +20,14 @@ final class Nginx implements ServiceInterface
         Mysql57::class,
     ];
 
-    public const USED_ENV_KEYS = [
-        'WORK_DIR',
-        'TZ',
-        'SERVER_NAME'
+    /**
+     * true - required
+     * false - not required
+     */
+    private const USED_ENV_KEYS = [
+        'WORK_DIR' => false,
+        'TZ' => false,
+        'SERVER_NAME' => true
     ];
 
     private array $configuration = [
@@ -74,6 +78,11 @@ final class Nginx implements ServiceInterface
     public function getConfiguration(): array
     {
         return $this->configuration;
+    }
+
+    public function getUsedEnvKeys(): array
+    {
+        return self::USED_ENV_KEYS;
     }
 
     public function after()

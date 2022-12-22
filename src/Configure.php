@@ -12,6 +12,7 @@ use Enjoys\DockerWs\Services\Nginx;
 use Enjoys\DockerWs\Services\NullService;
 use Enjoys\DockerWs\Services\Php;
 use Enjoys\DockerWs\Services\ServiceInterface;
+use Enjoys\DotenvWriter\DotenvWriter;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,7 +35,7 @@ final class Configure extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-//        $this->setRootPath($input, $output);
+        $this->setRootPath($input, $output);
 
 //if (file_exists(Variables::$rootPath .'/docker-compose.yml')){
 //    throw new \RuntimeException('Настройка уже была произведена, для новой настройки удалите файл docker-compose.yml');
@@ -47,6 +48,7 @@ final class Configure extends Command
         $this->addDatabaseServerService($input, $output);
 
         $this->copyFilesInRootDirectory();
+        $this->createDockerEnv($input, $output);
         $this->buildDockerComposeFile();
 
         return Command::SUCCESS;
@@ -65,9 +67,9 @@ final class Configure extends Command
             sprintf(
                 ' <info>%s</info> [<comment>%s</comment>]:',
                 'Введите ROOT_PATH директорию',
-                './'
+                getenv('ROOT_PATH') ?: './'
             ),
-            './'
+            getenv('ROOT_PATH') ?: './'
         );
 
         $answer = $questionHelper->ask($input, $output, $question);
@@ -202,6 +204,57 @@ final class Configure extends Command
         );
         $name = $helper->ask($input, $output, $question);
         $service->setName($name);
+    }
+
+    private function createDockerEnv(InputInterface $input, OutputInterface $output)
+    {
+        $envs = [];
+        /** @var ServiceInterface $service */
+        foreach (DockerCompose::getServices() as $service) {
+            $envs = array_merge_recursive($envs, $service->getUsedEnvKeys());
+        }
+
+        $envs = array_map(function ($item){
+            if (is_array($item)){
+                return in_array(true, $item, true);
+            }
+            return $item;
+        }, $envs);
+
+        $helper = $this->getHelper('question');
+
+        @unlink(Variables::$rootPath.'/.docker.env');
+        $dotEnvWriter = new DotenvWriter(Variables::$rootPath.'/.docker.env');
+
+        foreach ($envs as $envName => $required) {
+            $question = new Question(
+                sprintf(
+                    ' Введите значение для переменной <comment>%s</comment> (если надо пропустить, ничего не вводите):',
+                    $envName
+                )
+            );
+
+            if ($required){
+                $question->setValidator(function ($answer) {
+                    if ($answer === null) {
+                        throw new \RuntimeException(
+                            'Эта переменная обязательна и не должна быть пустой строкой'
+                        );
+                    }
+
+                    return $answer;
+                });
+            }
+
+            $envValue = $helper->ask($input, $output, $question);
+            if ($envValue === null) {
+                continue;
+            }
+            $dotEnvWriter->setEnv($envName, $envValue);
+
+        }
+
+        $dotEnvWriter->save();
     }
 
 }

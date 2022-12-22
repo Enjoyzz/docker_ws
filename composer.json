@@ -5,7 +5,8 @@
         "php": ">= 8.0",
         "symfony/console": "^6.0",
         "enjoys/functions": "^2.4",
-        "symfony/yaml": "^6.0"
+        "symfony/yaml": "^6.0",
+        "enjoys/dotenv-writer": "^0.1"
     },
     "license": "MIT",
     "autoload": {

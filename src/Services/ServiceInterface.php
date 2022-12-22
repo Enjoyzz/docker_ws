@@ -9,6 +9,8 @@ namespace Enjoys\DockerWs\Services;
 interface ServiceInterface
 {
 
+
+
     public function getName();
 
     public function before();
@@ -18,4 +20,6 @@ interface ServiceInterface
     public function getConfiguration();
 
     public function setName(string $name);
+
+    public function getUsedEnvKeys(): array;
 }

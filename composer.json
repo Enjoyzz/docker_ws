@@ -14,9 +14,12 @@
         }
     },
     "bin": [
-        "bin/docker"
+        "files/bin/docker"
     ],
     "require-dev": {
         "symfony/var-dumper": "^6.0"
+    },
+    "scripts": {
+
     }
 }

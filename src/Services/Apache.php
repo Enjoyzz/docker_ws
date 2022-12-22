@@ -84,7 +84,7 @@ final class Apache implements ServiceInterface
 
     public function after()
     {
-        copyDirectoryWithFilesRecursive(__DIR__ . '/../../docker/apache', Variables::$rootPath . '/docker/apache');
+        copyDirectoryWithFilesRecursive(Variables::FILES_DIR . '/docker/apache', Variables::$rootPath . '/docker/apache');
     }
 
     public function getConfiguration(): array

@@ -87,11 +87,11 @@ final class Php implements ServiceInterface
     public function after()
     {
         copyDirectoryWithFilesRecursive(
-            __DIR__ . '/../../docker/php/' . $this->phpVersion,
+            Variables::FILES_DIR . '/docker/php/' . $this->phpVersion,
             Variables::$rootPath . '/docker/php'
         );
-        copy(__DIR__ . '/../../docker/php/alias.sh', Variables::$rootPath . '/docker/php/alias.sh');
-        copy(__DIR__ . '/../../docker/php/sendmail', Variables::$rootPath . '/docker/php/sendmail');
+        copy(Variables::FILES_DIR . '/docker/php/alias.sh', Variables::$rootPath . '/docker/php/alias.sh');
+        copy(Variables::FILES_DIR . '/docker/php/sendmail', Variables::$rootPath . '/docker/php/sendmail');
     }
 
     public function before()

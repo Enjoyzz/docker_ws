@@ -29,13 +29,17 @@ use function Enjoys\FileSystem\writeFile;
 final class Configure extends Command
 {
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    /**
+     * @throws \Exception
+     */
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
 //        $this->setRootPath($input, $output);
 
 //if (file_exists(Variables::$rootPath .'/docker-compose.yml')){
 //    throw new \RuntimeException('Настройка уже была произведена, для новой настройки удалите файл docker-compose.yml');
 //}
+        createDirectory(Variables::$rootPath . '/docker');
         removeDirectoryRecursive(Variables::$rootPath . '/docker');
 
         $this->addPhpService($input, $output);

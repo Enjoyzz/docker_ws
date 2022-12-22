@@ -78,12 +78,11 @@ final class Nginx implements ServiceInterface
 
     public function after()
     {
-        copyDirectoryWithFilesRecursive(__DIR__ . '/../../docker/nginx', Variables::$rootPath . '/docker/nginx');
+        copyDirectoryWithFilesRecursive(Variables::FILES_DIR . '/docker/nginx', Variables::$rootPath . '/docker/nginx');
     }
 
     public function before()
     {
-
         $registeredServices = DockerCompose::getServices(true);
 
         foreach ($registeredServices as $service) {
@@ -95,7 +94,7 @@ final class Nginx implements ServiceInterface
         $phpService = DockerCompose::getServiceByKey(Php::class);
         $this->configuration['environment']['FASTCGI_PASS'] = sprintf('%s:9000', $phpService->getName());
 
-        if (empty($this->configuration['depends_on'])){
+        if (empty($this->configuration['depends_on'])) {
             unset($this->configuration['depends_on']);
         }
     }

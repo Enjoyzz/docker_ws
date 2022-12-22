@@ -62,12 +62,10 @@ final class Mysql57 implements ServiceInterface
 
     public function before()
     {
-        // TODO: Implement before() method.
     }
 
     public function after()
     {
-        // TODO: Implement after() method.
     }
 
     /**

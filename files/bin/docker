@@ -1,11 +1,11 @@
 #!/bin/bash
 
-VERSION=2.0.2
+VERSION=2.1.0
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "$SCRIPT_DIR" || exit
 
-ENV_NAME=${ENV_NAME:='.env'}
+ENV_NAME=${ENV_NAME:='.docker.env'}
 
 DOCKER_COMPOSE_FILE=$(realpath "./../docker-compose.yml")
 ENV_FILE=$(realpath "$SCRIPT_DIR/../$ENV_NAME")

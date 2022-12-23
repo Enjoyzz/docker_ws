@@ -181,7 +181,8 @@ final class Configure extends Command
     private function copyFilesInRootDirectory(): void
     {
         copyDirectoryWithFilesRecursive(Variables::FILES_DIR .'/.data', Variables::$rootPath . '/.data');
-        CreateSymlink(Variables::$rootPath . '/bin/docker', Variables::FILES_DIR .'/bin/docker');
+        copyDirectoryWithFilesRecursive(Variables::FILES_DIR .'/bin', Variables::$rootPath . '/bin');
+//        CreateSymlink(Variables::$rootPath . '/bin/docker', Variables::FILES_DIR .'/bin/docker');
     }
 
     /**

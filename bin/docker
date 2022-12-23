@@ -17,16 +17,17 @@ if (
     !includeIfExists(__DIR__ . '/../vendor/autoload.php') &&
     !includeIfExists(__DIR__ . '/../../../../../vendor/autoload.php')
 ) {
-    fwrite(STDERR, 'Install dependencies using Composer.'.PHP_EOL);
+    fwrite(STDERR, 'Install dependencies using Composer.' . PHP_EOL);
     exit(1);
 }
 
 $application = new Application();
 
 
-    $application->addCommands([
-            new \Enjoys\DockerWs\Configure()
-    ]);
+$application->addCommands([
+    new \Enjoys\DockerWs\Configure(),
+    new \Enjoys\DockerWs\Serve\UpCommand(),
+]);
 
-    $application->run();
+$application->run();
 

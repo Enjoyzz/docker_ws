@@ -206,8 +206,7 @@ final class Configure extends Command
     private function copyFilesInRootDirectory(): void
     {
         copyDirectoryWithFilesRecursive(__DIR__ . '/../files' . '/.data', getenv('ROOT_PATH') . '/.data');
-        copyDirectoryWithFilesRecursive(__DIR__ . '/../files' . '/bin', getenv('ROOT_PATH') . '/bin');
-//        CreateSymlink(Variables::$rootPath . '/bin/docker', Variables::FILES_DIR .'/bin/docker');
+//        CreateSymlink(getenv('ROOT_PATH') . '/bin/docker', __DIR__.'/../bin/docker-ws');
     }
 
     /**

@@ -10,26 +10,22 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
 #[AsCommand(
-    name: 'serve:up',
+    name: 'serve:down',
     description: '',
-    aliases: ['up', 'start']
+    aliases: ['down', 'stop']
 )]
-class UpCommand extends Serve
+class DownCommand extends Serve
 {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-
         $process = new Process([
             'docker-compose',
             '--file',
             (getenv('ROOT_PATH') ?: '.') . '/docker-compose.yml',
             '--env-file',
             (getenv('ROOT_PATH') ?: '.') . '/.docker.env',
-            'up',
-            '--build',
-            '--remove-orphans',
-            '-d'
+            'down',
         ]);
 
         $process->setTimeout(null)
@@ -41,7 +37,7 @@ class UpCommand extends Serve
             return Command::FAILURE;
         }
 
-        $output->writeln(['<info>Docker is running...</info>', '']);
+        $output->writeln(['<info>Docker is stopped...</info>', '']);
 
         return Command::SUCCESS;
     }

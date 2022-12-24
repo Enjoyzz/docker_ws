@@ -7,7 +7,6 @@ namespace Enjoys\DockerWs\Services;
 
 
 use Enjoys\DockerWs\DockerCompose;
-use Enjoys\DockerWs\Variables;
 
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
 
@@ -87,7 +86,7 @@ final class Apache implements ServiceInterface
 
     public function after()
     {
-        copyDirectoryWithFilesRecursive(Variables::FILES_DIR . '/docker/apache', Variables::$rootPath . '/docker/apache');
+        copyDirectoryWithFilesRecursive(__DIR__.'/../../files/docker/apache', getenv('ROOT_PATH') . '/docker/apache');
     }
 
     public function getConfiguration(): array

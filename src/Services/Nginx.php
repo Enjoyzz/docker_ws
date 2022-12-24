@@ -7,7 +7,6 @@ namespace Enjoys\DockerWs\Services;
 
 
 use Enjoys\DockerWs\DockerCompose;
-use Enjoys\DockerWs\Variables;
 
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
 
@@ -86,7 +85,7 @@ final class Nginx implements ServiceInterface
 
     public function after()
     {
-        copyDirectoryWithFilesRecursive(Variables::FILES_DIR . '/docker/nginx', Variables::$rootPath . '/docker/nginx');
+        copyDirectoryWithFilesRecursive(__DIR__.'/../../files/docker/nginx', getenv('ROOT_PATH'). '/docker/nginx');
     }
 
     public function before()

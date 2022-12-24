@@ -5,10 +5,6 @@ declare(strict_types=1);
 
 namespace Enjoys\DockerWs\Services;
 
-
-use Enjoys\DockerWs\Variables;
-use Symfony\Component\Yaml\Yaml;
-
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
 
 final class Php implements ServiceInterface
@@ -95,11 +91,11 @@ final class Php implements ServiceInterface
     public function after()
     {
         copyDirectoryWithFilesRecursive(
-            Variables::FILES_DIR . '/docker/php/' . $this->phpVersion,
-            Variables::$rootPath . '/docker/php'
+            __DIR__ . '/../../files/docker/php/' . $this->phpVersion,
+            getenv('ROOT_PATH') . '/docker/php'
         );
-        copy(Variables::FILES_DIR . '/docker/php/alias.sh', Variables::$rootPath . '/docker/php/alias.sh');
-        copy(Variables::FILES_DIR . '/docker/php/sendmail', Variables::$rootPath . '/docker/php/sendmail');
+        copy(__DIR__ . '/../../files/docker/php/alias.sh', getenv('ROOT_PATH') . '/docker/php/alias.sh');
+        copy(__DIR__ . '/../../files/docker/php/sendmail', getenv('ROOT_PATH') . '/docker/php/sendmail');
     }
 
     public function before()

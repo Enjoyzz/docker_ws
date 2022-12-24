@@ -16,13 +16,13 @@ use Enjoys\DotenvWriter\DotenvWriter;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
 use function Enjoys\FileSystem\createDirectory;
-use function Enjoys\FileSystem\CreateSymlink;
 use function Enjoys\FileSystem\removeDirectoryRecursive;
 use function Enjoys\FileSystem\writeFile;
 
@@ -30,18 +30,27 @@ use function Enjoys\FileSystem\writeFile;
 final class Configure extends Command
 {
 
+    protected function configure()
+    {
+        $this
+            ->addOption('path', 'p', InputOption::VALUE_REQUIRED)
+        ;
+    }
+
     /**
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->setRootPath($input, $output);
+        if ($input->getOption('path') !== getenv('ROOT_PATH')) {
+            $this->setRootPath($input, $output);
+        }
 
 //if (file_exists(Variables::$rootPath .'/docker-compose.yml')){
 //    throw new \RuntimeException('Настройка уже была произведена, для новой настройки удалите файл docker-compose.yml');
 //}
-        createDirectory(Variables::$rootPath . '/docker');
-        removeDirectoryRecursive(Variables::$rootPath . '/docker');
+        createDirectory(getenv('ROOT_PATH') . '/docker');
+        removeDirectoryRecursive(getenv('ROOT_PATH') . '/docker');
 
         $this->addPhpService($input, $output);
         $this->addHttpServerService($input, $output);
@@ -72,10 +81,14 @@ final class Configure extends Command
             getenv('ROOT_PATH') ?: './'
         );
 
-        $answer = $questionHelper->ask($input, $output, $question);
-        Variables::$rootPath = trim($answer);
-        createDirectory(Variables::$rootPath);
-        $output->writeln(realpath(Variables::$rootPath));
+        $rootPath = realpath(trim($questionHelper->ask($input, $output, $question)));
+        if (!is_string($rootPath)){
+            throw new \RuntimeException('Invalid ROOT_PATH variable');
+        }
+        putenv(sprintf('ROOT_PATH=%s', $rootPath));
+
+        createDirectory(getenv('ROOT_PATH'));
+        $output->writeln(getenv('ROOT_PATH'));
     }
 
     /**
@@ -169,7 +182,7 @@ final class Configure extends Command
     private function buildDockerComposeFile(): void
     {
         writeFile(
-            Variables::$rootPath . '/docker-compose.yml',
+            getenv('ROOT_PATH') . '/docker-compose.yml',
             DockerCompose::build()
         );
     }
@@ -180,8 +193,8 @@ final class Configure extends Command
      */
     private function copyFilesInRootDirectory(): void
     {
-        copyDirectoryWithFilesRecursive(Variables::FILES_DIR .'/.data', Variables::$rootPath . '/.data');
-        copyDirectoryWithFilesRecursive(Variables::FILES_DIR .'/bin', Variables::$rootPath . '/bin');
+        copyDirectoryWithFilesRecursive(__DIR__.'/../files' . '/.data', getenv('ROOT_PATH') . '/.data');
+        copyDirectoryWithFilesRecursive(__DIR__.'/../files' . '/bin', getenv('ROOT_PATH') . '/bin');
 //        CreateSymlink(Variables::$rootPath . '/bin/docker', Variables::FILES_DIR .'/bin/docker');
     }
 
@@ -215,8 +228,8 @@ final class Configure extends Command
             $envs = array_merge_recursive($envs, $service->getUsedEnvKeys());
         }
 
-        $envs = array_map(function ($item){
-            if (is_array($item)){
+        $envs = array_map(function ($item) {
+            if (is_array($item)) {
                 return in_array(true, $item, true);
             }
             return $item;
@@ -224,8 +237,8 @@ final class Configure extends Command
 
         $helper = $this->getHelper('question');
 
-        @unlink(Variables::$rootPath.'/.docker.env');
-        $dotEnvWriter = new DotenvWriter(Variables::$rootPath.'/.docker.env');
+        @unlink(getenv('ROOT_PATH') . '/.docker.env');
+        $dotEnvWriter = new DotenvWriter(getenv('ROOT_PATH') . '/.docker.env');
 
         foreach ($envs as $envName => $required) {
             $question = new Question(
@@ -235,7 +248,7 @@ final class Configure extends Command
                 )
             );
 
-            if ($required){
+            if ($required) {
                 $question->setValidator(function ($answer) {
                     if ($answer === null) {
                         throw new \RuntimeException(
@@ -252,7 +265,6 @@ final class Configure extends Command
                 continue;
             }
             $dotEnvWriter->setEnv($envName, $envValue);
-
         }
 
         $dotEnvWriter->save();

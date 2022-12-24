@@ -42,6 +42,16 @@ final class Configure extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $formatter = $this->getHelper('formatter');
+
+        $output->writeln(
+            $formatter->formatBlock(
+                ['Docker compose configuration'],
+                'bg=blue;fg=white',
+                true
+            )
+        );
+
         if ($input->getOption('path') !== getenv('ROOT_PATH')) {
             $this->setRootPath($input, $output);
         }

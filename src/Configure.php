@@ -70,6 +70,8 @@ final class Configure extends Command
         $this->createDockerEnv($input, $output);
         $this->buildDockerComposeFile();
 
+        $output->writeln(['<info>Docker Compose has been setting</info>', '']);
+
         return Command::SUCCESS;
     }
 
@@ -92,7 +94,7 @@ final class Configure extends Command
         );
 
         $rootPath = realpath(trim($questionHelper->ask($input, $output, $question)));
-        if (!is_string($rootPath)){
+        if (!is_string($rootPath)) {
             throw new \RuntimeException('Invalid ROOT_PATH variable');
         }
         putenv(sprintf('ROOT_PATH=%s', $rootPath));
@@ -203,8 +205,8 @@ final class Configure extends Command
      */
     private function copyFilesInRootDirectory(): void
     {
-        copyDirectoryWithFilesRecursive(__DIR__.'/../files' . '/.data', getenv('ROOT_PATH') . '/.data');
-        copyDirectoryWithFilesRecursive(__DIR__.'/../files' . '/bin', getenv('ROOT_PATH') . '/bin');
+        copyDirectoryWithFilesRecursive(__DIR__ . '/../files' . '/.data', getenv('ROOT_PATH') . '/.data');
+        copyDirectoryWithFilesRecursive(__DIR__ . '/../files' . '/bin', getenv('ROOT_PATH') . '/bin');
 //        CreateSymlink(Variables::$rootPath . '/bin/docker', Variables::FILES_DIR .'/bin/docker');
     }
 
@@ -227,11 +229,24 @@ final class Configure extends Command
             ), $service->getName()
         );
         $name = $helper->ask($input, $output, $question);
+
+        $output->writeln('');
+
         $service->setName($name);
     }
 
     private function createDockerEnv(InputInterface $input, OutputInterface $output)
     {
+        $formatter = $this->getHelper('formatter');
+        $output->writeln([
+                '',
+                $formatter->formatBlock(
+                    ['Setup variables used docker-compose.yml...'],
+                    'bg=blue;fg=white',
+                )
+            ]
+        );
+
         $envs = [];
         /** @var ServiceInterface $service */
         foreach (DockerCompose::getServices() as $service) {

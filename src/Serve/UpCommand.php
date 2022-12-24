@@ -48,15 +48,7 @@ class UpCommand extends Command
             return Command::FAILURE;
         }
 
-//        $output->writeln($process->getOutput(), OutputInterface::VERBOSITY_VERBOSE);
-//        $output->writeln($process->getErrorOutput(), OutputInterface::VERBOSITY_VERY_VERBOSE);
-
-        $output->writeln(
-            $formatter->formatBlock(
-                ['Run docker container'],
-                'bg=green;fg=white'
-            )
-        );
+        $output->writeln(['<info>Docker is running...</info>', '']);
 
         return Command::SUCCESS;
     }

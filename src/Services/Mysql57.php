@@ -20,7 +20,6 @@ final class Mysql57 implements ServiceInterface
     ];
 
     private array $configuration = [
-        'container_name' => 'mysql',
         'image' => 'mysql:5.7',
         'volumes' => [
             './.data/mysql/5.7/data:/var/lib/mysql',

@@ -31,7 +31,6 @@ final class Apache implements ServiceInterface
     private string $name = 'apache-2.4';
 
     private array $configuration = [
-        'container_name' => 'apache',
         'build' => [
             'context' => './docker/apache',
             'dockerfile' => 'Dockerfile'

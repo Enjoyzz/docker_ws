@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace Enjoys\DockerWs;
 
 
+use Enjoys\DockerWs\Envs\EnvInterface;
 use Enjoys\DockerWs\Services\Apache;
 use Enjoys\DockerWs\Services\Mysql57;
 use Enjoys\DockerWs\Services\Nginx;
@@ -70,7 +71,7 @@ final class Configure extends Command
         $this->createDockerEnv($input, $output);
         $this->buildDockerComposeFile();
 
-        $output->writeln(['<info>Docker Compose has been setting</info>', '']);
+        $output->writeln(['', '<fg=green;options=bold>Docker Compose has been setting</>', '']);
 
         return Command::SUCCESS;
     }
@@ -241,7 +242,7 @@ final class Configure extends Command
                 '',
                 $formatter->formatBlock(
                     ['Setup variables used docker-compose.yml...'],
-                    'bg=blue;fg=white',
+                    'options=bold',
                 )
             ]
         );
@@ -252,21 +253,27 @@ final class Configure extends Command
             $envs = array_unique(array_merge_recursive($envs, $service->getUsedEnvKeys()));
         }
 
-
-
         $helper = $this->getHelper('question');
 
         @unlink(getenv('ROOT_PATH') . '/.docker.env');
         $dotEnvWriter = new DotenvWriter(getenv('ROOT_PATH') . '/.docker.env');
 
 
+        /** @var class-string<EnvInterface> $envClassString */
         foreach ($envs as $envClassString) {
             $env = new $envClassString();
             $question = new Question(
                 $env->getQuestionString(),
                 $env->getDefault()
             );
-            $question->setAutocompleterValues($env->autocomplete());
+
+            $autocompleter = $env->getAutocompleter();
+            if (is_iterable($autocompleter)) {
+                $question->setAutocompleterValues($autocompleter);
+            } else {
+                $question->setAutocompleterCallback($autocompleter);
+            }
+
             $question->setValidator($env->getValidator());
             $question->setNormalizer($env->getNormalizer());
 

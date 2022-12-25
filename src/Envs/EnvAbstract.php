@@ -60,9 +60,9 @@ abstract class EnvAbstract implements EnvInterface
         };
     }
 
-    public function autocomplete(): array
+    public function getAutocompleter(): iterable|callable|null
     {
-        return [];
+        return null;
     }
 
     public function isRequired(): bool

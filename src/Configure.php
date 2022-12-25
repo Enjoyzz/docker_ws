@@ -70,6 +70,7 @@ final class Configure extends Command
         $this->copyFilesInRootDirectory();
         $this->createDockerEnv($input, $output);
         $this->buildDockerComposeFile();
+        $this->writeDockerServicesSummary();
 
         $output->writeln(['', '<fg=green;options=bold>Docker Compose has been setting</>', '']);
 
@@ -286,6 +287,32 @@ final class Configure extends Command
         }
 
         $dotEnvWriter->save();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function writeDockerServicesSummary()
+    {
+        $services = [];
+        foreach (DockerCompose::getServices() as $serviceClassString => $service) {
+            switch ($serviceClassString) {
+                case Php::class:
+                    $services['php'] = $service->getName();
+                    break;
+                case Mysql57::class:
+                    $services['db'] = $service->getName();
+                    break;
+                case Nginx::class:
+                case Apache::class:
+                    $services['http'] = $service->getName();
+                    break;
+            }
+        }
+        writeFile(
+            getenv('ROOT_PATH') . '/.docker.services',
+            json_encode($services)
+        );
     }
 
 }

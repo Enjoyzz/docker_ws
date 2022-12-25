@@ -8,6 +8,10 @@ namespace Enjoys\DockerWs\Services;
 
 use Enjoys\DockerWs\DockerCompose;
 
+use Enjoys\DockerWs\Envs\ServerName;
+use Enjoys\DockerWs\Envs\Tz;
+use Enjoys\DockerWs\Envs\WorkDir;
+
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
 
 final class Apache implements ServiceInterface
@@ -22,8 +26,8 @@ final class Apache implements ServiceInterface
      * false - not required
      */
     private const USED_ENV_KEYS = [
-        'WORK_DIR' => false,
-        'SERVER_NAME' => true
+        ServerName::class,
+        WorkDir::class,
     ];
 
 

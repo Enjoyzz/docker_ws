@@ -5,6 +5,10 @@ declare(strict_types=1);
 
 namespace Enjoys\DockerWs\Services;
 
+use Enjoys\DockerWs\Envs\Tz;
+
+use Enjoys\DockerWs\Envs\WorkDir;
+
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
 
 final class Php implements ServiceInterface
@@ -16,8 +20,8 @@ final class Php implements ServiceInterface
      * false - not required
      */
     private const USED_ENV_KEYS = [
-        'WORK_DIR' => false,
-        'TZ' => false,
+        Tz::class,
+        WorkDir::class,
     ];
 
     protected array $configuration = [

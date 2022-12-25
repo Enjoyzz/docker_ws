@@ -6,6 +6,9 @@ declare(strict_types=1);
 namespace Enjoys\DockerWs\Services;
 
 
+use Enjoys\DockerWs\Envs\DatabaseName;
+use Enjoys\DockerWs\Envs\DatabasePass;
+
 final class Mysql57 implements ServiceInterface
 {
     private string $name = 'mysql-5.7';
@@ -15,8 +18,8 @@ final class Mysql57 implements ServiceInterface
      * false - not required
      */
     private const USED_ENV_KEYS = [
-        'DATABASE_NAME' => true,
-        'DATABASE_PASS' => true,
+        DatabaseName::class,
+        DatabasePass::class,
     ];
 
     private array $configuration = [

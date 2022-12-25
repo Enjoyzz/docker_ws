@@ -249,46 +249,33 @@ final class Configure extends Command
         $envs = [];
         /** @var ServiceInterface $service */
         foreach (DockerCompose::getServices() as $service) {
-            $envs = array_merge_recursive($envs, $service->getUsedEnvKeys());
+            $envs = array_unique(array_merge_recursive($envs, $service->getUsedEnvKeys()));
         }
 
-        $envs = array_map(function ($item) {
-            if (is_array($item)) {
-                return in_array(true, $item, true);
-            }
-            return $item;
-        }, $envs);
+
 
         $helper = $this->getHelper('question');
 
         @unlink(getenv('ROOT_PATH') . '/.docker.env');
         $dotEnvWriter = new DotenvWriter(getenv('ROOT_PATH') . '/.docker.env');
 
-        foreach ($envs as $envName => $required) {
+
+        foreach ($envs as $envClassString) {
+            $env = new $envClassString();
             $question = new Question(
-                sprintf(
-                    ' Введите значение для переменной <comment>%s</comment> (если надо пропустить, ничего не вводите):',
-                    $envName
-                )
+                $env->getQuestionString(),
+                $env->getDefault()
             );
-
-            if ($required) {
-                $question->setValidator(function ($answer) {
-                    if ($answer === null) {
-                        throw new \RuntimeException(
-                            'Эта переменная обязательна и не должна быть пустой строкой'
-                        );
-                    }
-
-                    return $answer;
-                });
-            }
+            $question->setAutocompleterValues($env->autocomplete());
+            $question->setValidator($env->getValidator());
+            $question->setNormalizer($env->getNormalizer());
 
             $envValue = $helper->ask($input, $output, $question);
+
             if ($envValue === null) {
                 continue;
             }
-            $dotEnvWriter->setEnv($envName, $envValue);
+            $dotEnvWriter->setEnv($env->getName(), $envValue);
         }
 
         $dotEnvWriter->save();

@@ -8,6 +8,12 @@ namespace Enjoys\DockerWs\Services;
 
 use Enjoys\DockerWs\DockerCompose;
 
+use Enjoys\DockerWs\Envs\ServerName;
+
+use Enjoys\DockerWs\Envs\Tz;
+
+use Enjoys\DockerWs\Envs\WorkDir;
+
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
 
 final class Nginx implements ServiceInterface
@@ -24,9 +30,9 @@ final class Nginx implements ServiceInterface
      * false - not required
      */
     private const USED_ENV_KEYS = [
-        'WORK_DIR' => false,
-        'TZ' => false,
-        'SERVER_NAME' => true
+        ServerName::class,
+        Tz::class,
+        WorkDir::class,
     ];
 
     private array $configuration = [

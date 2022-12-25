@@ -18,8 +18,6 @@ final class Php implements ServiceInterface
     private const USED_ENV_KEYS = [
         'WORK_DIR' => false,
         'TZ' => false,
-        'USER_NAME' => false,
-        'USER_ID' => false
     ];
 
     protected array $configuration = [

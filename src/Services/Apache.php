@@ -7,7 +7,10 @@ namespace Enjoys\DockerWs\Services;
 
 
 use Enjoys\DockerWs\DockerCompose;
-use Enjoys\DockerWs\Variables;
+
+use Enjoys\DockerWs\Envs\ServerName;
+use Enjoys\DockerWs\Envs\Tz;
+use Enjoys\DockerWs\Envs\WorkDir;
 
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
 
@@ -23,15 +26,14 @@ final class Apache implements ServiceInterface
      * false - not required
      */
     private const USED_ENV_KEYS = [
-        'WORK_DIR' => false,
-        'SERVER_NAME' => true
+        ServerName::class,
+        WorkDir::class,
     ];
 
 
     private string $name = 'apache-2.4';
 
     private array $configuration = [
-        'container_name' => 'apache',
         'build' => [
             'context' => './docker/apache',
             'dockerfile' => 'Dockerfile'
@@ -88,7 +90,7 @@ final class Apache implements ServiceInterface
 
     public function after()
     {
-        copyDirectoryWithFilesRecursive(Variables::FILES_DIR . '/docker/apache', Variables::$rootPath . '/docker/apache');
+        copyDirectoryWithFilesRecursive(__DIR__.'/../../files/docker/apache', getenv('ROOT_PATH') . '/docker/apache');
     }
 
     public function getConfiguration(): array

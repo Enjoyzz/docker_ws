@@ -7,7 +7,12 @@ namespace Enjoys\DockerWs\Services;
 
 
 use Enjoys\DockerWs\DockerCompose;
-use Enjoys\DockerWs\Variables;
+
+use Enjoys\DockerWs\Envs\ServerName;
+
+use Enjoys\DockerWs\Envs\Tz;
+
+use Enjoys\DockerWs\Envs\WorkDir;
 
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
 
@@ -25,13 +30,12 @@ final class Nginx implements ServiceInterface
      * false - not required
      */
     private const USED_ENV_KEYS = [
-        'WORK_DIR' => false,
-        'TZ' => false,
-        'SERVER_NAME' => true
+        ServerName::class,
+        Tz::class,
+        WorkDir::class,
     ];
 
     private array $configuration = [
-        'container_name' => 'nginx',
         'image' => 'nginx:1.19-alpine',
         'ports' => [
             '80:80',
@@ -88,7 +92,7 @@ final class Nginx implements ServiceInterface
 
     public function after()
     {
-        copyDirectoryWithFilesRecursive(Variables::FILES_DIR . '/docker/nginx', Variables::$rootPath . '/docker/nginx');
+        copyDirectoryWithFilesRecursive(__DIR__.'/../../files/docker/nginx', getenv('ROOT_PATH'). '/docker/nginx');
     }
 
     public function before()

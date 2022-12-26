@@ -5,9 +5,9 @@ declare(strict_types=1);
 
 namespace Enjoys\DockerWs\Services;
 
+use Enjoys\DockerWs\Envs\Tz;
 
-use Enjoys\DockerWs\Variables;
-use Symfony\Component\Yaml\Yaml;
+use Enjoys\DockerWs\Envs\WorkDir;
 
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
 
@@ -20,14 +20,11 @@ final class Php implements ServiceInterface
      * false - not required
      */
     private const USED_ENV_KEYS = [
-        'WORK_DIR' => false,
-        'TZ' => false,
-        'USER_NAME' => false,
-        'USER_ID' => false
+        Tz::class,
+        WorkDir::class,
     ];
 
     protected array $configuration = [
-        'container_name' => 'php',
         'build' => [
             'context' => './docker/php',
             'dockerfile' => 'Dockerfile',
@@ -96,11 +93,11 @@ final class Php implements ServiceInterface
     public function after()
     {
         copyDirectoryWithFilesRecursive(
-            Variables::FILES_DIR . '/docker/php/' . $this->phpVersion,
-            Variables::$rootPath . '/docker/php'
+            __DIR__ . '/../../files/docker/php/' . $this->phpVersion,
+            getenv('ROOT_PATH') . '/docker/php'
         );
-        copy(Variables::FILES_DIR . '/docker/php/alias.sh', Variables::$rootPath . '/docker/php/alias.sh');
-        copy(Variables::FILES_DIR . '/docker/php/sendmail', Variables::$rootPath . '/docker/php/sendmail');
+        copy(__DIR__ . '/../../files/docker/php/alias.sh', getenv('ROOT_PATH') . '/docker/php/alias.sh');
+        copy(__DIR__ . '/../../files/docker/php/sendmail', getenv('ROOT_PATH') . '/docker/php/sendmail');
     }
 
     public function before()

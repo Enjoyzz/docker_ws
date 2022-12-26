@@ -26,9 +26,9 @@ server {
 }
 
 server {
-    listen 8000 default_server;
+    listen 8000;
     index index.php index.html;
-    server_name test.localhost;
+    server_name test.${SERVER_NAME};
     root ${PUBLIC_DIR};
 
     location / {

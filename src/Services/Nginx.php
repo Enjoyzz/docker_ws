@@ -35,6 +35,7 @@ final class Nginx implements ServiceInterface
         'image' => 'nginx:1.19-alpine',
         'ports' => [
             '80:80',
+            '8000:8000'
         ],
         'volumes' => [
             './docker/nginx/templates:/etc/nginx/templates',

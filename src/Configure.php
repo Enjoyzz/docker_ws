@@ -9,6 +9,7 @@ namespace Enjoys\DockerWs;
 use Enjoys\DockerWs\Envs\EnvInterface;
 use Enjoys\DockerWs\Services\Apache;
 use Enjoys\DockerWs\Services\Mysql57;
+use Enjoys\DockerWs\Services\Mysql80;
 use Enjoys\DockerWs\Services\Nginx;
 use Enjoys\DockerWs\Services\NullService;
 use Enjoys\DockerWs\Services\Php;
@@ -171,7 +172,11 @@ final class Configure extends Command
         $question = new ChoiceQuestion(
             'Select Database server (defaults to none)',
             // choices can also be PHP objects that implement __toString() method
-            [new NullService(), new Mysql57()],
+            [
+                new NullService(),
+                new Mysql57(),
+                new Mysql80()
+            ],
             0
         );
         $question->setErrorMessage('WebServer %s is invalid.');

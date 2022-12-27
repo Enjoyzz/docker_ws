@@ -1,2 +1,7 @@
 /vendor/
 /composer.lock
+/.data/
+/docker/
+/.docker.env
+/.docker.services
+/docker-compose.yml

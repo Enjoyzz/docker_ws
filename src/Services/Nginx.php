@@ -7,11 +7,8 @@ namespace Enjoys\DockerWs\Services;
 
 
 use Enjoys\DockerWs\DockerCompose;
-
 use Enjoys\DockerWs\Envs\ServerName;
-
 use Enjoys\DockerWs\Envs\Tz;
-
 use Enjoys\DockerWs\Envs\WorkDir;
 
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
@@ -22,13 +19,10 @@ final class Nginx implements ServiceInterface
 
     private const POSSIBLE_DEPEND_SERVICES = [
         Php::class,
-        Mysql57::class,
+        Mysql\Mysql80::class, Mysql\Mysql57::class,
+        Postgres\v14::class, Postgres\v15::class
     ];
 
-    /**
-     * true - required
-     * false - not required
-     */
     private const USED_ENV_KEYS = [
         ServerName::class,
         Tz::class,

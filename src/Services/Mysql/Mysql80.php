@@ -3,17 +3,18 @@
 declare(strict_types=1);
 
 
-namespace Enjoys\DockerWs\Services;
+namespace Enjoys\DockerWs\Services\Mysql;
 
 
 use Enjoys\DockerWs\Envs\DatabaseName;
 use Enjoys\DockerWs\Envs\DatabasePass;
 use Enjoys\DockerWs\Envs\DatabaseUser;
 use Enjoys\DockerWs\Envs\Tz;
+use Enjoys\DockerWs\Services\ServiceInterface;
 
 final class Mysql80 implements ServiceInterface
 {
-    private string $name = 'mysql-8.0';
+    private string $name = 'mysql';
 
     /**
      * true - required
@@ -61,7 +62,7 @@ final class Mysql80 implements ServiceInterface
 
     public function __toString(): string
     {
-        return $this->getName();
+        return '8.0.*';
     }
 
     public function getConfiguration(): array

@@ -8,12 +8,14 @@ namespace Enjoys\DockerWs;
 
 use Enjoys\DockerWs\Envs\EnvInterface;
 use Enjoys\DockerWs\Services\Apache;
-use Enjoys\DockerWs\Services\Mysql57;
-use Enjoys\DockerWs\Services\Mysql80;
+use Enjoys\DockerWs\Services\Back;
+use Enjoys\DockerWs\Services\Mysql;
 use Enjoys\DockerWs\Services\Nginx;
 use Enjoys\DockerWs\Services\NullService;
 use Enjoys\DockerWs\Services\Php;
+use Enjoys\DockerWs\Services\Postgres;
 use Enjoys\DockerWs\Services\ServiceInterface;
+use Enjoys\DockerWs\Services\Versioned;
 use Enjoys\DotenvWriter\DotenvWriter;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -168,26 +170,37 @@ final class Configure extends Command
      */
     private function addDatabaseServerService(InputInterface $input, OutputInterface $output): void
     {
+        $dbname='';
         $helper = $this->getHelper('question');
         $question = new ChoiceQuestion(
             'Select Database server (defaults to none)',
             // choices can also be PHP objects that implement __toString() method
             [
                 new NullService(),
-                new Mysql57(),
-                new Mysql80()
+                new Mysql(),
+                new Postgres()
             ],
             0
         );
-        $question->setErrorMessage('WebServer %s is invalid.');
+        $question->setErrorMessage('%s is invalid.');
 
-        /** @var ServiceInterface $service */
+        /** @var NullService|Versioned|ServiceInterface $service */
         $service = $helper->ask($input, $output, $question);
-        $output->writeln('You have Webserver selected: ' . $service);
 
         if ($service instanceof NullService) {
             return;
         }
+
+        if ($service instanceof Versioned){
+            $dbname = $service->__toString();
+            $service = $service->selectVersion($helper, $input, $output);
+            if ($service instanceof Back){
+                $this->addDatabaseServerService($input, $output);
+                return;
+            }
+        }
+
+        $output->writeln(sprintf('Chosen Database Server: <options=bold>%s %s</>', $dbname, $service));
 
         $this->setNewNameForService($service, $input, $output);
 
@@ -305,7 +318,10 @@ final class Configure extends Command
                 case Php::class:
                     $services['php'] = $service->getName();
                     break;
-                case Mysql57::class:
+                case Mysql\Mysql57::class:
+                case Mysql\Mysql80::class:
+                case Postgres\v15::class:
+                case Postgres\v14::class:
                     $services['db'] = $service->getName();
                     break;
                 case Nginx::class:

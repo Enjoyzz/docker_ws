@@ -9,7 +9,8 @@ namespace Enjoys\DockerWs\Services;
 use Enjoys\DockerWs\DockerCompose;
 use Enjoys\DockerWs\Envs\ServerName;
 use Enjoys\DockerWs\Envs\WorkDir;
-use Enjoys\DockerWs\Services\Mysql\Mysql57;
+
+
 
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
 
@@ -17,7 +18,8 @@ final class Apache implements ServiceInterface
 {
     private const POSSIBLE_DEPEND_SERVICES = [
         Php::class,
-        Mysql57::class,
+        Mysql\Mysql57::class, Mysql\Mysql80::class,
+        Postgres\v14::class, Postgres\v15::class
     ];
 
     /**

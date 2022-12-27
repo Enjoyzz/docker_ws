@@ -29,6 +29,7 @@ final class v15 implements ServiceInterface
     private array $configuration = [
         'image' => 'postgres:15',
         'volumes' => [
+            './.data/postgres/15:/var/lib/postgresql/data',
             './.data/postgres/dump:/dump',
         ],
         'ports' => [
@@ -36,9 +37,9 @@ final class v15 implements ServiceInterface
         ],
         'restart' => 'unless-stopped',
         'environment' => [
-            'POSTGRES_DB' => '${DATABASE_NAME}',
             'POSTGRES_USER' => '${DATABASE_USER}',
             'POSTGRES_PASSWORD' => '${DATABASE_PASS}',
+            'POSTGRES_DB' => '${DATABASE_NAME}',
         ],
         'networks' => [
             'backend',

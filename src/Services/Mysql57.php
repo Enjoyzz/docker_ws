@@ -8,6 +8,8 @@ namespace Enjoys\DockerWs\Services;
 
 use Enjoys\DockerWs\Envs\DatabaseName;
 use Enjoys\DockerWs\Envs\DatabasePass;
+use Enjoys\DockerWs\Envs\DatabaseUser;
+use Enjoys\DockerWs\Envs\Tz;
 
 final class Mysql57 implements ServiceInterface
 {
@@ -18,8 +20,10 @@ final class Mysql57 implements ServiceInterface
      * false - not required
      */
     private const USED_ENV_KEYS = [
-        DatabaseName::class,
+        DatabaseUser::class,
         DatabasePass::class,
+        DatabaseName::class,
+        Tz::class
     ];
 
     private array $configuration = [
@@ -37,8 +41,10 @@ final class Mysql57 implements ServiceInterface
             'seccomp:unconfined',
         ],
         'environment' => [
+            'MYSQL_USER' => '${DATABASE_USER}',
+            'MYSQL_PASSWORD' => '${DATABASE_PASS}',
             'MYSQL_DATABASE' => '${DATABASE_NAME}',
-            'MYSQL_ROOT_PASSWORD' => '${DATABASE_PASS}',
+            'MYSQL_RANDOM_ROOT_PASSWORD' => true,
             'TZ' => '${TZ}',
         ],
         'networks' => [
@@ -58,10 +64,7 @@ final class Mysql57 implements ServiceInterface
         return $this->getName();
     }
 
-    /**
-     * @return mixed
-     */
-    public function getConfiguration(): mixed
+    public function getConfiguration(): array
     {
         return $this->configuration;
     }

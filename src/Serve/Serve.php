@@ -19,11 +19,21 @@ abstract class Serve extends Command
         $dotenv = new Dotenv((getenv('ROOT_PATH') ?: '.') . '/.docker.env');
         $dotenv->loadEnv();
 
+        try {
+            $userName = trim(
+                Process::fromShellCommandline('id -un')->mustRun()->getOutput()
+            );
+            $userId = trim(
+                Process::fromShellCommandline('id -u')->mustRun()->getOutput()
+            );
+        } catch (\Exception) {
+            $userName = 'username';
+            $userId = 1000;
+        }
+
         $_ENV['TZ'] = $_ENV['TZ'] ?? 'UTC';
-        $_ENV['USER_NAME'] = $_ENV['USER_NAME'] ?? trim(
-            Process::fromShellCommandline('id -un')->mustRun()->getOutput()
-        );
-        $_ENV['USER_ID'] = $_ENV['USER_ID'] ?? trim(Process::fromShellCommandline('id -u')->mustRun()->getOutput());
+        $_ENV['USER_NAME'] = $_ENV['USER_NAME'] ?? $userName;
+        $_ENV['USER_ID'] = $_ENV['USER_ID'] ?? $userId;
         $_ENV['WORK_DIR'] = $_ENV['WORK_DIR'] ?? '/var/www';
     }
 }

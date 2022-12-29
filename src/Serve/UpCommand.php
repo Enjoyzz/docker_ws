@@ -2,7 +2,6 @@
 
 namespace Enjoys\DockerWs\Serve;
 
-use Enjoys\Dotenv\Dotenv;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,7 +32,7 @@ class UpCommand extends Serve
         ]);
 
         $process->setTimeout(null)
-            ->setTty(true)
+            ->setTty(Process::isTtySupported())
             ->run()
         ;
 

@@ -15,10 +15,6 @@ final class Php implements ServiceInterface
 {
     private string $name = 'php';
 
-    /**
-     * true - required
-     * false - not required
-     */
     private const USED_ENV_KEYS = [
         Tz::class,
         WorkDir::class,

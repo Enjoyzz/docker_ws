@@ -22,10 +22,6 @@ final class Apache implements ServiceInterface
         Postgres\v14::class, Postgres\v15::class
     ];
 
-    /**
-     * true - required
-     * false - not required
-     */
     private const USED_ENV_KEYS = [
         ServerName::class,
         WorkDir::class,

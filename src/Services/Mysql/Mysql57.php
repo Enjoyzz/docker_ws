@@ -16,10 +16,6 @@ final class Mysql57 implements ServiceInterface
 {
     private string $name = 'mysql';
 
-    /**
-     * true - required
-     * false - not required
-     */
     private const USED_ENV_KEYS = [
         DatabaseUser::class,
         DatabasePass::class,

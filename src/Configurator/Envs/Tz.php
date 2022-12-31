@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 
-namespace Enjoys\DockerWs\Envs;
+namespace Enjoys\DockerWs\Configurator\Envs;
 
 
 final class Tz extends EnvAbstract

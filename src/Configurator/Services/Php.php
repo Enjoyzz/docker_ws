@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 
-namespace Enjoys\DockerWs\Services;
+namespace Enjoys\DockerWs\Configurator\Services;
 
-use Enjoys\DockerWs\Envs\Tz;
-
-use Enjoys\DockerWs\Envs\WorkDir;
+use Enjoys\DockerWs\Configurator\Envs\WorkDir;
+use Enjoys\DockerWs\Configurator\ServiceInterface;
+use Enjoys\DockerWs\Configurator\Envs\Tz;
 
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
 
@@ -89,11 +89,11 @@ final class Php implements ServiceInterface
     public function after()
     {
         copyDirectoryWithFilesRecursive(
-            __DIR__ . '/../../files/docker/php/' . $this->phpVersion,
+            __DIR__ . '/../../../files/docker/php/' . $this->phpVersion,
             getenv('ROOT_PATH') . '/docker/php'
         );
-        copy(__DIR__ . '/../../files/docker/php/alias.sh', getenv('ROOT_PATH') . '/docker/php/alias.sh');
-        copy(__DIR__ . '/../../files/docker/php/sendmail', getenv('ROOT_PATH') . '/docker/php/sendmail');
+        copy(__DIR__ . '/../../../files/docker/php/alias.sh', getenv('ROOT_PATH') . '/docker/php/alias.sh');
+        copy(__DIR__ . '/../../../files/docker/php/sendmail', getenv('ROOT_PATH') . '/docker/php/sendmail');
     }
 
     public function before()

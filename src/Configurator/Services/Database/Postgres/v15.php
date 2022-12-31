@@ -2,22 +2,21 @@
 
 declare(strict_types=1);
 
+namespace Enjoys\DockerWs\Configurator\Services\Database\Postgres;
 
-namespace Enjoys\DockerWs\Services\Postgres;
+use Enjoys\DockerWs\Configurator\Envs\DatabaseName;
+use Enjoys\DockerWs\Configurator\Envs\DatabasePass;
+use Enjoys\DockerWs\Configurator\Envs\DatabaseUser;
+use Enjoys\DockerWs\Configurator\ServiceInterface;
+use Enjoys\DockerWs\Configurator\Services\Database\DatabaseInterface;
 
-
-use Enjoys\DockerWs\Envs\DatabaseName;
-use Enjoys\DockerWs\Envs\DatabasePass;
-use Enjoys\DockerWs\Envs\DatabaseUser;
-use Enjoys\DockerWs\Services\ServiceInterface;
-
-final class v14 implements ServiceInterface
+final class v15 implements ServiceInterface, DatabaseInterface
 {
     private string $name = 'postgresql';
 
     public function __toString(): string
     {
-        return '14.x';
+        return '15.x';
     }
 
     private const USED_ENV_KEYS = [
@@ -27,9 +26,9 @@ final class v14 implements ServiceInterface
     ];
 
     private array $configuration = [
-        'image' => 'postgres:14',
+        'image' => 'postgres:15',
         'volumes' => [
-            './.data/postgres/14:/var/lib/postgresql/data',
+            './.data/postgres/15:/var/lib/postgresql/data',
             './.data/postgres/dump:/dump',
         ],
         'ports' => [
@@ -52,7 +51,6 @@ final class v14 implements ServiceInterface
     {
         return $this->name;
     }
-
 
 
     public function getConfiguration(): array

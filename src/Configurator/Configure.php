@@ -3,19 +3,12 @@
 declare(strict_types=1);
 
 
-namespace Enjoys\DockerWs;
+namespace Enjoys\DockerWs\Configurator;
 
 
-use Enjoys\DockerWs\Envs\EnvInterface;
-use Enjoys\DockerWs\Services\Apache;
-use Enjoys\DockerWs\Services\Back;
-use Enjoys\DockerWs\Services\Mysql;
-use Enjoys\DockerWs\Services\Nginx;
-use Enjoys\DockerWs\Services\NullService;
-use Enjoys\DockerWs\Services\Php;
-use Enjoys\DockerWs\Services\Postgres;
-use Enjoys\DockerWs\Services\ServiceInterface;
-use Enjoys\DockerWs\Services\Versioned;
+use Enjoys\DockerWs\Configurator\Choice\Back;
+use Enjoys\DockerWs\Configurator\Choice\None;
+use Enjoys\DockerWs\Configurator\Services;
 use Enjoys\DotenvWriter\DotenvWriter;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -139,7 +132,7 @@ final class Configure extends Command
         $phpVersion = $helper->ask($input, $output, $question);
         $output->writeln('You have php version choose: ' . $phpVersion);
 
-        $service = new Php($phpVersion);
+        $service = new Services\Php($phpVersion);
 
         DockerCompose::addService($service);
     }
@@ -155,7 +148,7 @@ final class Configure extends Command
         $question = new ChoiceQuestion(
             'Select WebServer(defaults to none)',
             // choices can also be PHP objects that implement __toString() method
-            [new NullService(), new Nginx(), new Apache()],
+            [new None(), new Services\Http\Nginx(), new Services\Http\Apache()],
             0
         );
         $question->setErrorMessage('WebServer %s is invalid.');
@@ -164,7 +157,7 @@ final class Configure extends Command
         $output->writeln('You have Webserver selected: ' . $service);
 
 
-        if ($service instanceof NullService) {
+        if ($service instanceof None) {
             return;
         }
 
@@ -184,18 +177,18 @@ final class Configure extends Command
             'Select Database server (defaults to none)',
             // choices can also be PHP objects that implement __toString() method
             [
-                new NullService(),
-                new Mysql(),
-                new Postgres()
+                new None(),
+                new Services\Database\Mysql(),
+                new Services\Database\Postgres()
             ],
             0
         );
         $question->setErrorMessage('%s is invalid.');
 
-        /** @var NullService|Versioned|ServiceInterface $service */
+        /** @var None|Versioned|ServiceInterface $service */
         $service = $helper->ask($input, $output, $question);
 
-        if ($service instanceof NullService) {
+        if ($service instanceof None) {
             return;
         }
 
@@ -231,7 +224,7 @@ final class Configure extends Command
      */
     private function copyFilesInRootDirectory(): void
     {
-        copyDirectoryWithFilesRecursive(__DIR__ . '/../files' . '/.data', getenv('ROOT_PATH') . '/.data');
+        copyDirectoryWithFilesRecursive(__DIR__ . '/../../files' . '/.data', getenv('ROOT_PATH') . '/.data');
     }
 
 
@@ -325,17 +318,16 @@ final class Configure extends Command
         $services = [];
         foreach (DockerCompose::getServices() as $serviceClassString => $service) {
             switch ($serviceClassString) {
-                case Php::class:
+                case Services\Php::class:
                     $services['php'] = $service->getName();
                     break;
-                case Mysql\Mysql57::class:
-                case Mysql\Mysql80::class:
-                case Postgres\v15::class:
-                case Postgres\v14::class:
+                case Services\Database\Mysql\Mysql57::class:
+                case Services\Database\Mysql\Mysql80::class:
+                case Services\Database\Postgres\v15::class:
                     $services['db'] = $service->getName();
                     break;
-                case Nginx::class:
-                case Apache::class:
+                case Services\Http\Nginx::class:
+                case Services\Http\Apache::class:
                     $services['http'] = $service->getName();
                     break;
             }

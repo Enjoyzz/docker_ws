@@ -3,14 +3,18 @@
 declare(strict_types=1);
 
 
-namespace Enjoys\DockerWs\Services;
+namespace Enjoys\DockerWs\Configurator\Services\Http;
 
 
-use Enjoys\DockerWs\DockerCompose;
-use Enjoys\DockerWs\Envs\PublicDir;
-use Enjoys\DockerWs\Envs\ServerName;
-use Enjoys\DockerWs\Envs\Tz;
-use Enjoys\DockerWs\Envs\WorkDir;
+use Enjoys\DockerWs\Configurator\DockerCompose;
+use Enjoys\DockerWs\Configurator\Envs\PublicDir;
+use Enjoys\DockerWs\Configurator\Envs\ServerName;
+use Enjoys\DockerWs\Configurator\Envs\Tz;
+use Enjoys\DockerWs\Configurator\Envs\WorkDir;
+use Enjoys\DockerWs\Configurator\ServiceInterface;
+use Enjoys\DockerWs\Configurator\Services;
+use Enjoys\DockerWs\Configurator\Services\Database\Mysql;
+use Enjoys\DockerWs\Configurator\Services\Database\Postgres;
 
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
 
@@ -19,9 +23,10 @@ final class Nginx implements ServiceInterface
     private string $name = 'nginx';
 
     private const POSSIBLE_DEPEND_SERVICES = [
-        Php::class,
-        Mysql\Mysql80::class, Mysql\Mysql57::class,
-        Postgres\v14::class, Postgres\v15::class
+        Services\Php::class,
+        Mysql\Mysql80::class,
+        Mysql\Mysql57::class,
+        Postgres\v15::class
     ];
 
     private const USED_ENV_KEYS = [
@@ -87,7 +92,10 @@ final class Nginx implements ServiceInterface
 
     public function after()
     {
-        copyDirectoryWithFilesRecursive(__DIR__.'/../../files/docker/nginx', getenv('ROOT_PATH'). '/docker/nginx');
+        copyDirectoryWithFilesRecursive(
+            __DIR__ . '/../../../../files/docker/nginx',
+            getenv('ROOT_PATH') . '/docker/nginx'
+        );
     }
 
     public function before()
@@ -100,7 +108,7 @@ final class Nginx implements ServiceInterface
             }
         }
 
-        $phpService = DockerCompose::getServiceByKey(Php::class);
+        $phpService = DockerCompose::getServiceByKey(Services\Php::class);
         $this->configuration['environment']['FASTCGI_PASS'] = sprintf('%s:9000', $phpService->getName());
 
         if (empty($this->configuration['depends_on'])) {

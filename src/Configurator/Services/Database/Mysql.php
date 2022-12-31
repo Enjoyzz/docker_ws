@@ -1,12 +1,15 @@
 <?php
 
-namespace Enjoys\DockerWs\Services;
+namespace Enjoys\DockerWs\Configurator\Services\Database;
 
+use Enjoys\DockerWs\Configurator\Choice\Back;
+use Enjoys\DockerWs\Configurator\ServiceInterface;
+use Enjoys\DockerWs\Configurator\Services\Database\Mysql as Version;
+use Enjoys\DockerWs\Configurator\Versioned;
 use Symfony\Component\Console\Helper\HelperInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Enjoys\DockerWs\Services\Mysql as Version;
 
 class Mysql implements Versioned
 {
@@ -19,8 +22,11 @@ class Mysql implements Versioned
     /**
      * @return ServiceInterface|Back
      */
-    public function selectVersion(HelperInterface $helper, InputInterface $input, OutputInterface $output)
-    {
+    public function selectVersion(
+        HelperInterface $helper,
+        InputInterface $input,
+        OutputInterface $output
+    ): Back|ServiceInterface {
         $question = new ChoiceQuestion(
             'Select Version of MySQL',
             [

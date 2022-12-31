@@ -3,11 +3,10 @@
 declare(strict_types=1);
 
 
-namespace Enjoys\DockerWs;
+namespace Enjoys\DockerWs\Configurator;
 
 
-use Enjoys\DockerWs\Services\NullService;
-use Enjoys\DockerWs\Services\ServiceInterface;
+use Enjoys\DockerWs\Configurator\Services\NullService;
 use Symfony\Component\Yaml\Yaml;
 
 final class DockerCompose

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 
-namespace Enjoys\DockerWs\Services;
+namespace Enjoys\DockerWs\Configurator;
 
 
 interface ServiceInterface

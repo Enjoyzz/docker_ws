@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use Enjoys\DockerWs\Configure;
+use Enjoys\DockerWs\Configurator\Configure;
 use Enjoys\DockerWs\Serve\DownCommand;
 use Enjoys\DockerWs\Serve\RestartCommand;
 use Enjoys\DockerWs\Serve\UpCommand;

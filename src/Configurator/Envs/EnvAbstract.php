@@ -3,8 +3,10 @@
 declare(strict_types=1);
 
 
-namespace Enjoys\DockerWs\Envs;
+namespace Enjoys\DockerWs\Configurator\Envs;
 
+
+use Enjoys\DockerWs\Configurator\EnvInterface;
 
 abstract class EnvAbstract implements EnvInterface
 {

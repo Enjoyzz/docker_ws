@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
+namespace Enjoys\DockerWs\Configurator\Services\Database\Mysql;
 
-namespace Enjoys\DockerWs\Services\Mysql;
+use Enjoys\DockerWs\Configurator\Envs\DatabaseName;
+use Enjoys\DockerWs\Configurator\Envs\DatabasePass;
+use Enjoys\DockerWs\Configurator\Envs\DatabaseUser;
+use Enjoys\DockerWs\Configurator\Envs\Tz;
+use Enjoys\DockerWs\Configurator\ServiceInterface;
+use Enjoys\DockerWs\Configurator\Services\Database\DatabaseInterface;
 
-
-use Enjoys\DockerWs\Envs\DatabaseName;
-use Enjoys\DockerWs\Envs\DatabasePass;
-use Enjoys\DockerWs\Envs\DatabaseUser;
-use Enjoys\DockerWs\Envs\Tz;
-use Enjoys\DockerWs\Services\ServiceInterface;
-
-final class Mysql57 implements ServiceInterface
+final class Mysql80 implements ServiceInterface, DatabaseInterface
 {
     private string $name = 'mysql';
 
@@ -24,15 +23,15 @@ final class Mysql57 implements ServiceInterface
     ];
 
     private array $configuration = [
-        'image' => 'mysql:5.7',
+        'image' => 'mysql:8.0',
         'volumes' => [
-            './.data/mysql/5.7/data:/var/lib/mysql',
-            './.data/mysql/5.7/conf.d:/etc/mysql/conf.d',
-            './.data/mysql/5.7/logs:/var/log/mysql',
+            './.data/mysql/8.0/data:/var/lib/mysql',
+            './.data/mysql/8.0/conf.d:/etc/mysql/conf.d',
+            './.data/mysql/8.0/logs:/var/log/mysql',
             './.data/mysql/dump:/dump',
         ],
         'ports' => [
-            '4305:3306',
+            '4308:3306',
         ],
         'security_opt' => [
             'seccomp:unconfined',
@@ -58,7 +57,7 @@ final class Mysql57 implements ServiceInterface
 
     public function __toString(): string
     {
-        return  '5.7.*';
+        return '8.0.*';
     }
 
     public function getConfiguration(): array

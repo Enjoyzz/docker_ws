@@ -7,6 +7,7 @@ namespace Enjoys\DockerWs\Services;
 
 
 use Enjoys\DockerWs\DockerCompose;
+use Enjoys\DockerWs\Envs\PublicDir;
 use Enjoys\DockerWs\Envs\ServerName;
 use Enjoys\DockerWs\Envs\WorkDir;
 
@@ -25,6 +26,7 @@ final class Apache implements ServiceInterface
     private const USED_ENV_KEYS = [
         ServerName::class,
         WorkDir::class,
+        PublicDir::class
     ];
 
 
@@ -36,7 +38,7 @@ final class Apache implements ServiceInterface
             'dockerfile' => 'Dockerfile'
         ],
         'environment' => [
-            'PUBLIC_DIR' => '${WORK_DIR}/public',
+            'PUBLIC_DIR' => '${PUBLIC_DIR}',
             'SERVER_NAME' => '${SERVER_NAME}',
             'FASTCGI_PASS' => 'php:9000',
             'LISTEN' => 80,

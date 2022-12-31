@@ -7,6 +7,7 @@ namespace Enjoys\DockerWs\Services;
 
 
 use Enjoys\DockerWs\DockerCompose;
+use Enjoys\DockerWs\Envs\PublicDir;
 use Enjoys\DockerWs\Envs\ServerName;
 use Enjoys\DockerWs\Envs\Tz;
 use Enjoys\DockerWs\Envs\WorkDir;
@@ -27,6 +28,7 @@ final class Nginx implements ServiceInterface
         ServerName::class,
         Tz::class,
         WorkDir::class,
+        PublicDir::class,
     ];
 
     private array $configuration = [
@@ -43,10 +45,9 @@ final class Nginx implements ServiceInterface
         'depends_on' => [],
         'environment' => [
             'TZ' => '${TZ}',
-            'PUBLIC_DIR' => '${WORK_DIR}/public',
+            'PUBLIC_DIR' => '${PUBLIC_DIR}',
             'SERVER_NAME' => '${SERVER_NAME}',
-            'FASTCGI_PASS' => 'php:9000',
-            'LISTEN' => 80,
+            'FASTCGI_PASS' => 'php:9000'
         ],
         'networks' => [
             'backend',

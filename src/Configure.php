@@ -104,7 +104,6 @@ final class Configure extends Command
         }
         putenv(sprintf('ROOT_PATH=%s', $rootPath));
 
-        createDirectory(getenv('ROOT_PATH'));
         $output->writeln(getenv('ROOT_PATH'));
     }
 

@@ -1,5 +1,5 @@
 server {
-    listen ${LISTEN};
+    listen 80;
     index index.php index.html;
     server_name ${SERVER_NAME};
     root ${PUBLIC_DIR};

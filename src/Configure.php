@@ -23,6 +23,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
@@ -81,6 +82,8 @@ final class Configure extends Command
 
         $this->copyFilesInRootDirectory();
         $this->createDockerEnv($input, $output);
+        $this->setNewNameForServices($input, $output);
+
         $this->buildDockerComposeFile();
         $this->writeDockerServicesSummary();
 
@@ -138,8 +141,6 @@ final class Configure extends Command
 
         $service = new Php($phpVersion);
 
-        $this->setNewNameForService($service, $input, $output);
-
         DockerCompose::addService($service);
     }
 
@@ -166,8 +167,6 @@ final class Configure extends Command
         if ($service instanceof NullService) {
             return;
         }
-
-        $this->setNewNameForService($service, $input, $output);
 
         DockerCompose::addService($service);
     }
@@ -211,8 +210,6 @@ final class Configure extends Command
 
         $output->writeln(sprintf('Chosen Database Server: <options=bold>%s %s</>', $dbname, $service));
 
-        $this->setNewNameForService($service, $input, $output);
-
         DockerCompose::addService($service);
     }
 
@@ -235,32 +232,36 @@ final class Configure extends Command
     private function copyFilesInRootDirectory(): void
     {
         copyDirectoryWithFilesRecursive(__DIR__ . '/../files' . '/.data', getenv('ROOT_PATH') . '/.data');
-//        CreateSymlink(getenv('ROOT_PATH') . '/bin/docker', __DIR__.'/../bin/docker-ws');
     }
 
-    /**
-     * @param ServiceInterface $service
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return void
-     */
-    private function setNewNameForService(
-        ServiceInterface $service,
+
+    private function setNewNameForServices(
         InputInterface $input,
         OutputInterface $output
     ): void {
         $helper = $this->getHelper('question');
-        $question = new Question(
-            sprintf(
-                ' Введите новое имя сервера (если надо изменить) [<comment>%s</comment>]:',
-                $service->getName()
-            ), $service->getName()
-        );
-        $name = $helper->ask($input, $output, $question);
 
-        $output->writeln('');
+        $output->writeln(['']);
+        $question = new ConfirmationQuestion(' <options=bold>Rename services names?</>[<comment>y/N</comment>]', false);
 
-        $service->setName($name);
+        if (!$helper->ask($input, $output, $question)) {
+            return;
+        }
+
+        foreach (DockerCompose::getServices() as $service) {
+            $question = new Question(
+                sprintf(
+                    ' Введите новое имя сервера (если надо изменить) [<comment>%s</comment>]:',
+                    $service->getName()
+                ), $service->getName()
+            );
+            $name = $helper->ask($input, $output, $question);
+
+            $output->writeln('');
+
+            $service->setName($name);
+        }
+
     }
 
     private function createDockerEnv(InputInterface $input, OutputInterface $output)

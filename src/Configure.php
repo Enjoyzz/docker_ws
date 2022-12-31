@@ -38,6 +38,7 @@ final class Configure extends Command
     {
         $this
             ->addOption('path', 'p', InputOption::VALUE_REQUIRED)
+            ->addOption('force', 'f', InputOption::VALUE_NONE)
         ;
     }
 
@@ -60,9 +61,17 @@ final class Configure extends Command
             $this->setRootPath($input, $output);
         }
 
-//if (file_exists(Variables::$rootPath .'/docker-compose.yml')){
-//    throw new \RuntimeException('Настройка уже была произведена, для новой настройки удалите файл docker-compose.yml');
-//}
+        if (!$input->getOption('force') && file_exists( getenv('ROOT_PATH') .'/docker-compose.yml')){
+            $output->writeln(
+                $formatter->formatBlock(
+                    ['Configuration is not possible, or delete the docker-compose.yml, or run the command with the --force flag'],
+                    'bg=red;fg=white',
+                    true
+                )
+            );
+            return Command::FAILURE;
+        }
+
         createDirectory(getenv('ROOT_PATH') . '/docker');
         removeDirectoryRecursive(getenv('ROOT_PATH') . '/docker');
 
@@ -98,13 +107,14 @@ final class Configure extends Command
             getenv('ROOT_PATH') ?: './'
         );
 
-        $rootPath = realpath(trim($questionHelper->ask($input, $output, $question)));
+        createDirectory($rootPath = trim($questionHelper->ask($input, $output, $question)));
+        $rootPath = realpath($rootPath);
         if (!is_string($rootPath)) {
             throw new \RuntimeException('Invalid ROOT_PATH variable');
         }
         putenv(sprintf('ROOT_PATH=%s', $rootPath));
 
-        $output->writeln(getenv('ROOT_PATH'));
+        $output->writeln('ROOT_PATH: <comment>'.getenv('ROOT_PATH').'</comment>');
     }
 
     /**

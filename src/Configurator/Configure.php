@@ -66,7 +66,6 @@ final class Configure extends Command
             return Command::FAILURE;
         }
 
-        createDirectory(getenv('ROOT_PATH') . '/docker');
         removeDirectoryRecursive(getenv('ROOT_PATH') . '/docker');
 
         $this->addPhpService($input, $output);

@@ -36,9 +36,9 @@ final class v15 implements ServiceInterface, DatabaseInterface
         ],
         'restart' => 'unless-stopped',
         'environment' => [
-            'POSTGRES_USER' => '${DATABASE_USER}',
-            'POSTGRES_PASSWORD' => '${DATABASE_PASS}',
-            'POSTGRES_DB' => '${DATABASE_NAME}',
+            'POSTGRES_USER' => '${DATABASE_USER:-user}',
+            'POSTGRES_PASSWORD' => '${DATABASE_PASS:-pass}',
+            'POSTGRES_DB' => '${DATABASE_NAME:-dbname}',
         ],
         'networks' => [
             'backend',

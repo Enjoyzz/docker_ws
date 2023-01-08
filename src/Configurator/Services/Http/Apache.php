@@ -43,7 +43,7 @@ final class Apache implements ServiceInterface
         ],
         'environment' => [
             'PUBLIC_DIR' => '${PUBLIC_DIR}',
-            'SERVER_NAME' => '${SERVER_NAME}',
+            'SERVER_NAME' => '${SERVER_NAME:-localhost}',
             'FASTCGI_PASS' => 'php:9000',
             'LISTEN' => 80,
         ],

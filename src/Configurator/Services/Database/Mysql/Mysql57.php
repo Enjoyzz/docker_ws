@@ -40,10 +40,10 @@ final class Mysql57 implements ServiceInterface, DatabaseInterface
             'seccomp:unconfined',
         ],
         'environment' => [
-            'MYSQL_USER' => '${DATABASE_USER}',
-            'MYSQL_PASSWORD' => '${DATABASE_PASS}',
-            'MYSQL_DATABASE' => '${DATABASE_NAME}',
-            'MYSQL_RANDOM_ROOT_PASSWORD' => true,
+            'MYSQL_USER' => '${DATABASE_USER:-user}',
+            'MYSQL_PASSWORD' => '${DATABASE_PASS:-pass}',
+            'MYSQL_DATABASE' => '${DATABASE_NAME:-dbname}',
+            'MYSQL_RANDOM_ROOT_PASSWORD' => 'yes',
             'TZ' => '${TZ}',
         ],
         'networks' => [

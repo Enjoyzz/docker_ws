@@ -31,11 +31,7 @@ final class Php implements ServiceInterface
                 'USER_ID' => '${USER_ID}',
             ]
         ],
-        'working_dir' => '${WORK_DIR}',
         'volumes' => [
-            './.data/ssh:/home/${USER_NAME}/.ssh',
-            './.data/cache:/home/${USER_NAME}/.cache',
-            './.data/composer:/home/${USER_NAME}/.composer',
             '/.data/mail:/home/mail',
             './:${WORK_DIR}',
         ],
@@ -84,16 +80,17 @@ final class Php implements ServiceInterface
     private function setPhpVersion(string $phpVersion): void
     {
         $this->phpVersion = $phpVersion;
+        $this->configuration['build']['args']['PHP_IMAGE'] = sprintf('enjoys/php:%s-fpm-alpine', $phpVersion);
     }
 
     public function after()
     {
         copyDirectoryWithFilesRecursive(
-            __DIR__ . '/../../../files/docker/php/' . $this->phpVersion,
+            __DIR__ . '/../../../files/docker/php',
             getenv('ROOT_PATH') . '/docker/php'
         );
-        copy(__DIR__ . '/../../../files/docker/php/alias.sh', getenv('ROOT_PATH') . '/docker/php/alias.sh');
-        copy(__DIR__ . '/../../../files/docker/php/sendmail', getenv('ROOT_PATH') . '/docker/php/sendmail');
+//        copy(__DIR__ . '/../../../files/docker/php/alias.sh', getenv('ROOT_PATH') . '/docker/php/alias.sh');
+//        copy(__DIR__ . '/../../../files/docker/php/sendmail', getenv('ROOT_PATH') . '/docker/php/sendmail');
     }
 
     public function before()

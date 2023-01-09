@@ -1,4 +1,5 @@
-FROM enjoys/php:8.1-fpm-alpine
+ARG PHP_IMAGE
+FROM ${PHP_IMAGE}
 
 # https://wiki.alpinelinux.org/wiki/Setting_the_timezone
 ARG TZ='UTC'

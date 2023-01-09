@@ -1,0 +1,59 @@
+#!/bin/bash
+
+VERSION=2.0.2
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd "$SCRIPT_DIR" || exit
+
+ENV_NAME=${ENV_NAME:='.env.docker'}
+
+DOCKER_COMPOSE_FILE=$(realpath "./../docker-compose.yml")
+ENV_FILE=$(realpath "$SCRIPT_DIR/../$ENV_NAME")
+
+# shellcheck disable=SC2046
+export $(grep -v '^#' "$ENV_FILE" | xargs)
+
+export USER_ID=${USER_ID:=$(id -u)}
+export USER_NAME=${USER_NAME:=$(id -un)}
+export WORK_DIR=${WORK_DIR:='/var/www'}
+export TZ=${TZ:='UTC'}
+export SERVER_NAME=${SERVER_NAME:='localhost'}
+
+echo "VERSION bin/docker: $VERSION"
+echo "ENV: $ENV_FILE"
+echo "DOCKER-COMPOSE: $DOCKER_COMPOSE_FILE"
+echo "USER: $USER_NAME ($USER_ID)"
+echo "TZ: $TZ"
+echo "SERVER_NAME: $SERVER_NAME"
+echo "SERVER_IP: $SERVER_IP"
+echo "WORK_DIR: $WORK_DIR"
+echo "=========================="
+
+start(){
+docker-compose --file $DOCKER_COMPOSE_FILE --env-file "$ENV_FILE"  up --build --remove-orphans -d
+echo "-------------"
+echo "Run in the browser http://$SERVER_NAME"
+}
+
+stop(){
+docker-compose --file $DOCKER_COMPOSE_FILE --env-file $ENV_FILE down
+}
+
+case $1 in
+start)
+start
+;;
+
+stop)
+stop
+;;
+
+restart)
+stop
+start
+;;
+*)
+echo "use docker {start|stop|restart}"
+;;
+esac
+

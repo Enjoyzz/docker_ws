@@ -47,7 +47,7 @@ final class Configure extends Command
             $question = new ConfirmationQuestion(' Configure docker? [<comment>Y/n</comment>]: ', true);
 
             if (false === $helperQuestion->ask($input, $output, $question)) {
-                return Command::FAILURE;
+                return Command::SUCCESS;
             }
         }
 

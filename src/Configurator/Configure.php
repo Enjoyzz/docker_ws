@@ -33,6 +33,7 @@ final class Configure extends Command
         $this
             ->addOption('path', 'p', InputOption::VALUE_REQUIRED)
             ->addOption('force', 'f', InputOption::VALUE_NONE)
+            ->addOption('confirm-configure', 'y', InputOption::VALUE_NONE)
         ;
     }
 
@@ -41,6 +42,16 @@ final class Configure extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        if (!$input->getOption('confirm-configure')) {
+            $helperQuestion = $this->getHelper('question');
+            $question = new ConfirmationQuestion(' Configure docker? [<comment>Y/n</comment>]: ', true);
+
+            if (false === $helperQuestion->ask($input, $output, $question)) {
+                return Command::FAILURE;
+            }
+        }
+
+
         $formatter = $this->getHelper('formatter');
 
         $output->writeln(
@@ -55,7 +66,7 @@ final class Configure extends Command
             $this->setRootPath($input, $output);
         }
 
-        if (!$input->getOption('force') && file_exists( getenv('ROOT_PATH') .'/docker-compose.yml')){
+        if (!$input->getOption('force') && file_exists(getenv('ROOT_PATH') . '/docker-compose.yml')) {
             $output->writeln(
                 $formatter->formatBlock(
                     ['Configuration is not possible, or delete the docker-compose.yml, or run the command with the --force flag'],
@@ -109,7 +120,7 @@ final class Configure extends Command
         }
         putenv(sprintf('ROOT_PATH=%s', $rootPath));
 
-        $output->writeln('ROOT_PATH: <comment>'.getenv('ROOT_PATH').'</comment>');
+        $output->writeln('ROOT_PATH: <comment>' . getenv('ROOT_PATH') . '</comment>');
     }
 
     /**
@@ -170,7 +181,7 @@ final class Configure extends Command
      */
     private function addDatabaseServerService(InputInterface $input, OutputInterface $output): void
     {
-        $dbname='';
+        $dbname = '';
         $helper = $this->getHelper('question');
         $question = new ChoiceQuestion(
             'Select Database server (defaults to none)',
@@ -191,10 +202,10 @@ final class Configure extends Command
             return;
         }
 
-        if ($service instanceof Versioned){
+        if ($service instanceof Versioned) {
             $dbname = $service->__toString();
             $service = $service->selectVersion($helper, $input, $output);
-            if ($service instanceof Back){
+            if ($service instanceof Back) {
                 $this->addDatabaseServerService($input, $output);
                 return;
             }
@@ -253,7 +264,6 @@ final class Configure extends Command
 
             $service->setName($name);
         }
-
     }
 
     private function createDockerEnv(InputInterface $input, OutputInterface $output)

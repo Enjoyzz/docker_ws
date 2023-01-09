@@ -62,7 +62,7 @@ final class Configure extends Command
             )
         );
 
-        if (realpath($input->getOption('path') ?? './') !== realpath(getenv('ROOT_PATH') ?: '/')) {
+        if ($input->getOption('path') !== getenv('ROOT_PATH')) {
             $this->setRootPath($input, $output);
         }
 

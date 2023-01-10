@@ -119,7 +119,8 @@ final class ConfigureCommand extends Command
         $this->buildDockerComposeFile();
         $this->writeDockerServicesSummary();
 
-
+        copy(__DIR__.'/.gitignore.dist', getenv('DOCKER_PATH').'/.gitignore');
+        copy(getenv('DOCKER_PATH').'/.env.docker', getenv('DOCKER_PATH').'/.env');
 
         return Command::SUCCESS;
     }

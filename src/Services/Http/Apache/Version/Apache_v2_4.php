@@ -15,6 +15,7 @@ use Enjoys\DockerWs\Services\Php\PhpService;
 use Enjoys\DockerWs\Services\ServiceInterface;
 
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
+use function Enjoys\FileSystem\createDirectory;
 
 final class Apache_v2_4 implements ServiceInterface, \Stringable
 {
@@ -56,7 +57,7 @@ final class Apache_v2_4 implements ServiceInterface, \Stringable
 
     ];
 
-    private const USED_ENV_KEYS = [
+    private const USED_ENV = [
         SERVER_NAME::class,
         WORK_DIR::class,
         PUBLIC_DIR::class,
@@ -64,7 +65,7 @@ final class Apache_v2_4 implements ServiceInterface, \Stringable
 
     public function getUsedEnvKeys(): array
     {
-        return self::USED_ENV_KEYS;
+        return self::USED_ENV;
     }
 
     public function getConfiguration()
@@ -78,6 +79,8 @@ final class Apache_v2_4 implements ServiceInterface, \Stringable
             __DIR__ . '/../images',
             getenv('DOCKER_PATH') . '/apache'
         );
+
+        createDirectory(getenv('DOCKER_PATH') . '/.data/logs/apache');
     }
 
     public function _before()

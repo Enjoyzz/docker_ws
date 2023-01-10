@@ -2,13 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Enjoys\DockerWs\Services\Db\Mysql\Version;
-
-
-
-
-
 
 use Enjoys\DockerWs\Envs\TZ;
 use Enjoys\DockerWs\Services\Db\Mysql\Env\MYSQL_DATABASE;
@@ -16,11 +10,13 @@ use Enjoys\DockerWs\Services\Db\Mysql\Env\MYSQL_PASSWORD;
 use Enjoys\DockerWs\Services\Db\Mysql\Env\MYSQL_USER;
 use Enjoys\DockerWs\Services\ServiceInterface;
 
+use function Enjoys\FileSystem\createDirectory;
+
 final class Mysql57 implements ServiceInterface
 {
     private string $serviceName = 'mysql';
 
-    private const USED_ENV_KEYS = [
+    private const USED_ENV = [
         MYSQL_USER::class,
         MYSQL_PASSWORD::class,
         MYSQL_DATABASE::class,
@@ -29,7 +25,7 @@ final class Mysql57 implements ServiceInterface
 
     public function getUsedEnvKeys(): array
     {
-        return self::USED_ENV_KEYS;
+        return self::USED_ENV;
     }
 
     private array $configuration = [
@@ -47,9 +43,9 @@ final class Mysql57 implements ServiceInterface
             'seccomp:unconfined',
         ],
         'environment' => [
-            'MYSQL_USER' => '${DATABASE_USER:-user}',
-            'MYSQL_PASSWORD' => '${DATABASE_PASS:-pass}',
-            'MYSQL_DATABASE' => '${DATABASE_NAME:-dbname}',
+            'MYSQL_USER' => '${MYSQL_USER}',
+            'MYSQL_PASSWORD' => '${MYSQL_PASSWORD}',
+            'MYSQL_DATABASE' => '${MYSQL_DATABASE}',
             'MYSQL_RANDOM_ROOT_PASSWORD' => 'yes',
             'TZ' => '${TZ}',
         ],
@@ -67,7 +63,7 @@ final class Mysql57 implements ServiceInterface
 
     public function __toString(): string
     {
-        return  '5.7.*';
+        return '5.7.*';
     }
 
     public function getConfiguration(): array
@@ -84,13 +80,18 @@ final class Mysql57 implements ServiceInterface
         $this->serviceName = $serviceName;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function _after()
     {
-        // TODO: Implement _after() method.
+        createDirectory(getenv('DOCKER_PATH') . '/.data/mysql/dump');
+        createDirectory(getenv('DOCKER_PATH') . '/.data/mysql/5.7/conf.d');
+        createDirectory(getenv('DOCKER_PATH') . '/.data/mysql/5.7/logs');
+        createDirectory(getenv('DOCKER_PATH') . '/.data/mysql/5.7/data');
     }
 
     public function _before()
     {
-        // TODO: Implement _before() method.
     }
 }

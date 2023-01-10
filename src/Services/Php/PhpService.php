@@ -13,6 +13,7 @@ use Enjoys\DockerWs\Services\Http\Env\SERVER_NAME;
 use Enjoys\DockerWs\Services\ServiceInterface;
 
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
+use function Enjoys\FileSystem\createDirectory;
 
 final class PhpService implements ServiceInterface
 {
@@ -46,14 +47,14 @@ final class PhpService implements ServiceInterface
         $this->configuration['build']['args']['PHP_IMAGE'] = sprintf('enjoys/php:%s-fpm-alpine', $phpVersion);
     }
 
-    private const USED_ENV_KEYS = [
+    private const USED_ENV = [
         TZ::class,
         WORK_DIR::class,
     ];
 
     public function getUsedEnvKeys(): array
     {
-        return self::USED_ENV_KEYS;
+        return self::USED_ENV;
     }
 
     public function getConfiguration(): array
@@ -70,6 +71,8 @@ final class PhpService implements ServiceInterface
             __DIR__ . '/images',
             getenv('DOCKER_PATH') . '/php'
         );
+
+        createDirectory(getenv('DOCKER_PATH') . '/.data/mail');
     }
 
     public function _before()

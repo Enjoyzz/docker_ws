@@ -17,6 +17,7 @@ use Enjoys\DockerWs\Services\Php\PhpService;
 use Enjoys\DockerWs\Services\ServiceInterface;
 
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
+use function Enjoys\FileSystem\createDirectory;
 
 final class Nginx implements ServiceInterface
 {
@@ -26,7 +27,7 @@ final class Nginx implements ServiceInterface
         PhpService::class
     ];
 
-    private const USED_ENV_KEYS = [
+    private const USED_ENV = [
         SERVER_NAME::class,
         TZ::class,
         WORK_DIR::class,
@@ -84,7 +85,7 @@ final class Nginx implements ServiceInterface
 
     public function getUsedEnvKeys(): array
     {
-        return self::USED_ENV_KEYS;
+        return self::USED_ENV;
     }
 
 
@@ -94,6 +95,9 @@ final class Nginx implements ServiceInterface
             __DIR__ . '/images',
             getenv('DOCKER_PATH') . '/nginx'
         );
+
+        createDirectory(getenv('DOCKER_PATH') . '/.data/logs/nginx');
+
     }
 
     public function _before()

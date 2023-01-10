@@ -28,6 +28,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
 use function Enjoys\FileSystem\createDirectory;
+use function Enjoys\FileSystem\makeSymlink;
 use function Enjoys\FileSystem\removeDirectoryRecursive;
 use function Enjoys\FileSystem\writeFile;
 
@@ -121,6 +122,8 @@ final class ConfigureCommand extends Command
 
         copy(__DIR__.'/.gitignore.dist', getenv('DOCKER_PATH').'/.gitignore');
         copy(getenv('DOCKER_PATH').'/.env.docker', getenv('DOCKER_PATH').'/.env');
+
+        makeSymlink(getenv('DOCKER_PATH').'/docker.mk', __DIR__.'/docker.mk');
 
         return Command::SUCCESS;
     }

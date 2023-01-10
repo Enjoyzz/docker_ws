@@ -26,8 +26,9 @@ final class PhpService implements ServiceInterface
             'args' => [
                 'TZ' => '${TZ}',
                 'WORK_DIR' => '${WORK_DIR}',
-                'USER' => '${USER}',
-                'UID' => '${UID}',
+                '__UNAME' => '${__UNAME:-user}',
+                '__UID' => '${__UID:-1000}',
+                '__GID' => '${__GID:-1000}',
             ]
         ],
         'volumes' => [

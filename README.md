@@ -11,3 +11,8 @@ Get help information
 ```shell
 ./vendor/bin/docker-ws configure --help
 ```
+
+Linux
+```shell
+__UNAME=$(id -un) __UID=$(id -u) docker-compose --file .docker/docker-compose.yml  up --build --remove-orphans -d
+```

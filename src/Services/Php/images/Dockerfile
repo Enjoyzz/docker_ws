@@ -15,15 +15,15 @@ COPY php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY php/php.ini /usr/local/etc/php/conf.d/40-custom.ini
 COPY php/sendmail /usr/local/bin
 
-ARG USER="user"
-ARG UID="1000"
-RUN echo ${USER}:${UID}
-RUN adduser --system ${USER} --uid ${UID}
+ARG __UNAME
+ARG __UID
+RUN echo ${__UNAME}:${__UID}
+RUN adduser --system ${__UNAME} --uid ${__UID}
 
 ARG WORK_DIR="/var/www"
 WORKDIR ${WORK_DIR}
 
-USER ${USER}
+USER ${__UNAME}
 
 ENV ENV=/etc/profile
 COPY php/alias.sh /etc/profile.d/alias.sh

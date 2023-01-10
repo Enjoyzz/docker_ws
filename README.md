@@ -1,9 +1,13 @@
 # docker_ws
-workspace docker
+Generate workspace docker for **develop**
+### _don't use this configuration on production_
 
-```
+Run application
+```shell
 ./vendor/bin/docker-ws configure
-./vendor/bin/docker-ws serve:up
-./vendor/bin/docker-ws serve:down
-./vendor/bin/docker-ws serve:reload
+```
+
+Get help information
+```shell
+./vendor/bin/docker-ws configure --help
 ```

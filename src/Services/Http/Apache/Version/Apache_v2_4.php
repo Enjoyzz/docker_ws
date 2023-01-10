@@ -6,11 +6,15 @@ declare(strict_types=1);
 namespace Enjoys\DockerWs\Services\Http\Apache\Version;
 
 
+use Enjoys\DockerWs\DockerCompose;
 use Enjoys\DockerWs\Envs\TZ;
 use Enjoys\DockerWs\Envs\WORK_DIR;
 use Enjoys\DockerWs\Services\Http\Env\PUBLIC_DIR;
 use Enjoys\DockerWs\Services\Http\Env\SERVER_NAME;
+use Enjoys\DockerWs\Services\Php\PhpService;
 use Enjoys\DockerWs\Services\ServiceInterface;
+
+use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
 
 final class Apache_v2_4 implements ServiceInterface, \Stringable
 {
@@ -20,6 +24,11 @@ final class Apache_v2_4 implements ServiceInterface, \Stringable
     {
         return 'Apache v2.4';
     }
+
+    private const POSSIBLE_DEPEND_SERVICES = [
+        PhpService::class
+    ];
+
 
     private array $configuration = [
         'build' => [
@@ -65,12 +74,28 @@ final class Apache_v2_4 implements ServiceInterface, \Stringable
 
     public function _after()
     {
-        // TODO: Implement _after() method.
+        copyDirectoryWithFilesRecursive(
+            __DIR__ . '/../files',
+            getenv('DOCKER_PATH') . '/apache'
+        );
     }
 
     public function _before()
     {
-        // TODO: Implement _before() method.
+        $registeredServices = DockerCompose::getServices(true);
+
+        foreach ($registeredServices as $service) {
+            if (in_array($service, self::POSSIBLE_DEPEND_SERVICES, true)) {
+                $this->configuration['depends_on'][] = DockerCompose::getServiceByKey($service)->getServiceName();
+            }
+        }
+
+        $phpService = DockerCompose::getServiceByKey(PhpService::class);
+        $this->configuration['environment']['FASTCGI_PASS'] = sprintf('%s:9000', $phpService->getServiceName());
+
+        if (empty($this->configuration['depends_on'])) {
+            unset($this->configuration['depends_on']);
+        }
     }
 
     /**

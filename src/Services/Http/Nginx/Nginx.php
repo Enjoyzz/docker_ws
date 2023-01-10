@@ -8,6 +8,7 @@ namespace Enjoys\DockerWs\Services\Http\Nginx;
 
 
 
+use Enjoys\DockerWs\DockerCompose;
 use Enjoys\DockerWs\Envs\TZ;
 use Enjoys\DockerWs\Envs\WORK_DIR;
 use Enjoys\DockerWs\Services\Http\Env\PUBLIC_DIR;
@@ -86,40 +87,30 @@ final class Nginx implements ServiceInterface
         return self::USED_ENV_KEYS;
     }
 
-    public function after()
+
+    public function _after()
     {
         copyDirectoryWithFilesRecursive(
-            __DIR__ . '/../../../../files/docker/nginx',
-            getenv('ROOT_PATH') . '/docker/nginx'
+            __DIR__ . '/files',
+            getenv('DOCKER_PATH') . '/nginx'
         );
     }
 
-    public function before()
+    public function _before()
     {
         $registeredServices = DockerCompose::getServices(true);
 
         foreach ($registeredServices as $service) {
             if (in_array($service, self::POSSIBLE_DEPEND_SERVICES, true)) {
-                $this->configuration['depends_on'][] = DockerCompose::getServiceByKey($service)->getName();
+                $this->configuration['depends_on'][] = DockerCompose::getServiceByKey($service)->getServiceName();
             }
         }
 
-        $phpService = DockerCompose::getServiceByKey(Services\Php::class);
-        $this->configuration['environment']['FASTCGI_PASS'] = sprintf('%s:9000', $phpService->getName());
+        $phpService = DockerCompose::getServiceByKey(PhpService::class);
+        $this->configuration['environment']['FASTCGI_PASS'] = sprintf('%s:9000', $phpService->getServiceName());
 
         if (empty($this->configuration['depends_on'])) {
             unset($this->configuration['depends_on']);
         }
-    }
-
-
-    public function _after()
-    {
-        // TODO: Implement _after() method.
-    }
-
-    public function _before()
-    {
-        // TODO: Implement _before() method.
     }
 }

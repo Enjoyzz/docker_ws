@@ -75,7 +75,7 @@ final class Apache_v2_4 implements ServiceInterface, \Stringable
     public function _after()
     {
         copyDirectoryWithFilesRecursive(
-            __DIR__ . '/../files',
+            __DIR__ . '/../images',
             getenv('DOCKER_PATH') . '/apache'
         );
     }

@@ -67,7 +67,7 @@ final class PhpService implements ServiceInterface
     public function _after()
     {
         copyDirectoryWithFilesRecursive(
-            __DIR__ . '/files',
+            __DIR__ . '/images',
             getenv('DOCKER_PATH') . '/php'
         );
     }

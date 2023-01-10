@@ -16,4 +16,8 @@ interface ServiceInterface
     public function _before();
 
     public function getUsedEnvKeys(): array;
+
+    public function getServiceName(): string;
+
+    public function setServiceName(string $serviceName): void;
 }

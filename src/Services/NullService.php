@@ -47,4 +47,9 @@ final class NullService implements ServiceInterface
     {
         return [];
     }
+
+    public function setServiceName(string $serviceName): void
+    {
+        // TODO: Implement setServiceName() method.
+    }
 }

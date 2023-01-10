@@ -7,8 +7,13 @@ namespace Enjoys\DockerWs;
 
 
 use Enjoys\DockerWs\Services\Db\Database;
+use Enjoys\DockerWs\Services\Db\Mysql\Version\Mysql57;
+use Enjoys\DockerWs\Services\Db\Mysql\Version\Mysql80;
+use Enjoys\DockerWs\Services\Http\Apache\Version\Apache_v2_4;
 use Enjoys\DockerWs\Services\Http\HttpServer;
+use Enjoys\DockerWs\Services\Http\Nginx\Nginx;
 use Enjoys\DockerWs\Services\Php\Php;
+use Enjoys\DockerWs\Services\Php\PhpService;
 use Enjoys\DockerWs\Services\SelectableService;
 use Enjoys\DockerWs\Services\ServiceInterface;
 use Enjoys\DotenvWriter\DotenvWriter;
@@ -114,10 +119,7 @@ final class ConfigureCommand extends Command
         $this->buildDockerComposeFile();
         $this->writeDockerServicesSummary();
 
-        writeFile(
-            getenv('DOCKER_PATH') . '/docker-compose.yml',
-            \Enjoys\DockerWs\DockerCompose::build()
-        );
+
 
         return Command::SUCCESS;
     }
@@ -148,6 +150,9 @@ final class ConfigureCommand extends Command
         $output->writeln('DOCKER_PATH: <comment>' . getenv('DOCKER_PATH') . '</comment>');
     }
 
+    /**
+     * @throws \Exception
+     */
     private function createDockerEnv(InputInterface $input, OutputInterface $output)
     {
 
@@ -166,7 +171,8 @@ final class ConfigureCommand extends Command
             $envs = array_unique(array_merge_recursive($envs, $service->getUsedEnvKeys()));
         }
 
-        $dotEnvWriter = new DotenvWriter(getenv('DOCKER_PATH') . '/.docker');
+        writeFile($path = getenv('DOCKER_PATH') . '/.env.docker');
+        $dotEnvWriter = new DotenvWriter($path);
 
 
         /** @var class-string<EnvInterface> $envClassString */
@@ -187,7 +193,7 @@ final class ConfigureCommand extends Command
             $question->setValidator($env->getValidator());
             $question->setNormalizer($env->getNormalizer());
 
-            $envValue = $helper->ask($input, $output, $question);
+            $envValue = $this->helperQuestion->ask($input, $output, $question);
 
             if ($envValue === null) {
                 continue;
@@ -196,6 +202,69 @@ final class ConfigureCommand extends Command
         }
 
         $dotEnvWriter->save();
+    }
+
+    private function setNewNameForServices(
+        InputInterface $input,
+        OutputInterface $output
+    ): void {
+        $helper = $this->getHelper('question');
+
+        $output->writeln(['']);
+        $question = new ConfirmationQuestion(' <options=bold>Rename services names?</>[<comment>y/N</comment>]', false);
+
+        if (!$helper->ask($input, $output, $question)) {
+            return;
+        }
+
+        foreach (DockerCompose::getServices() as $service) {
+            $question = new Question(
+                sprintf(
+                    ' Введите новое имя сервера (если надо изменить) [<comment>%s</comment>]:',
+                    $service->getServiceName()
+                ), $service->getServiceName()
+            );
+            $name = $helper->ask($input, $output, $question);
+
+            $output->writeln('');
+
+            $service->setServiceName($name);
+        }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function buildDockerComposeFile(): void
+    {
+        writeFile(
+            getenv('DOCKER_PATH') . '/docker-compose.yml',
+            \Enjoys\DockerWs\DockerCompose::build()
+        );
+    }
+
+    private function writeDockerServicesSummary()
+    {
+        $services = [];
+        foreach (DockerCompose::getServices() as $serviceClassString => $service) {
+            switch ($serviceClassString) {
+                case PhpService::class:
+                    $services['php'] = $service->getServiceName();
+                    break;
+                case Mysql57::class:
+                case Mysql80::class:
+                    $services['db'] = $service->getServiceName();
+                    break;
+                case Nginx::class:
+                case Apache_v2_4::class:
+                    $services['http'] = $service->getServiceName();
+                    break;
+            }
+        }
+        writeFile(
+            getenv('DOCKER_PATH') . '/.services',
+            json_encode($services)
+        );
     }
 
 }

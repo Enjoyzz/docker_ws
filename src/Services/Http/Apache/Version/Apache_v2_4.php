@@ -32,7 +32,7 @@ final class Apache_v2_4 implements ServiceInterface, \Stringable
 
     private array $configuration = [
         'build' => [
-            'context' => './docker/apache',
+            'context' => './apache',
             'dockerfile' => 'Dockerfile'
         ],
         'environment' => [
@@ -44,7 +44,7 @@ final class Apache_v2_4 implements ServiceInterface, \Stringable
 
         'volumes' => [
             './.data/logs/apache/:/var/log/',
-            './:${WORK_DIR}',
+            './..:${WORK_DIR}',
         ],
         'depends_on' => [],
         'ports' => [

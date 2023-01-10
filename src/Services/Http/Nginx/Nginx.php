@@ -40,9 +40,9 @@ final class Nginx implements ServiceInterface
             '8000:8000'
         ],
         'volumes' => [
-            './docker/nginx/templates:/etc/nginx/templates',
+            './nginx/templates:/etc/nginx/templates',
             './.data/logs/nginx:/var/log/nginx',
-            './:${WORK_DIR}',
+            './..:${WORK_DIR}',
         ],
         'depends_on' => [],
         'environment' => [

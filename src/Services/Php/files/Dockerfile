@@ -26,4 +26,4 @@ WORKDIR ${WORK_DIR}
 USER ${USER_NAME}
 
 ENV ENV=/etc/profile
-COPY alias.sh /etc/profile.d/alias.sh
+COPY php/alias.sh /etc/profile.d/alias.sh

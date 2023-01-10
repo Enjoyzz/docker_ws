@@ -25,13 +25,11 @@ final class PhpService implements ServiceInterface
             'args' => [
                 'TZ' => '${TZ}',
                 'WORK_DIR' => '${WORK_DIR}',
-                'USER_NAME' => '${USER_NAME}',
-                'USER_ID' => '${USER_ID}',
             ]
         ],
         'volumes' => [
             '/.data/mail:/home/mail',
-            './:${WORK_DIR}',
+            './..:${WORK_DIR}',
         ],
         'ports' => [
             '9006:9000'

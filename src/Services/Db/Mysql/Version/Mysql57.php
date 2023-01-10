@@ -10,18 +10,27 @@ namespace Enjoys\DockerWs\Services\Db\Mysql\Version;
 
 
 
+use Enjoys\DockerWs\Envs\TZ;
+use Enjoys\DockerWs\Services\Db\Mysql\Env\MYSQL_DATABASE;
+use Enjoys\DockerWs\Services\Db\Mysql\Env\MYSQL_PASSWORD;
+use Enjoys\DockerWs\Services\Db\Mysql\Env\MYSQL_USER;
 use Enjoys\DockerWs\Services\ServiceInterface;
 
 final class Mysql57 implements ServiceInterface
 {
     private string $serviceName = 'mysql';
 
-//    private const USED_ENV_KEYS = [
-//        DatabaseUser::class,
-//        DatabasePass::class,
-//        DatabaseName::class,
-//        Tz::class
-//    ];
+    private const USED_ENV_KEYS = [
+        MYSQL_USER::class,
+        MYSQL_PASSWORD::class,
+        MYSQL_DATABASE::class,
+        TZ::class
+    ];
+
+    public function getUsedEnvKeys(): array
+    {
+        return self::USED_ENV_KEYS;
+    }
 
     private array $configuration = [
         'image' => 'mysql:5.7',

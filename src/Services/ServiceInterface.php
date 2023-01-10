@@ -14,4 +14,6 @@ interface ServiceInterface
     public function _after();
 
     public function _before();
+
+    public function getUsedEnvKeys(): array;
 }

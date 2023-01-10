@@ -6,6 +6,10 @@ declare(strict_types=1);
 namespace Enjoys\DockerWs\Services\Php;
 
 
+use Enjoys\DockerWs\Envs\TZ;
+use Enjoys\DockerWs\Envs\WORK_DIR;
+use Enjoys\DockerWs\Services\Http\Env\PUBLIC_DIR;
+use Enjoys\DockerWs\Services\Http\Env\SERVER_NAME;
 use Enjoys\DockerWs\Services\ServiceInterface;
 
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
@@ -36,19 +40,30 @@ final class PhpService implements ServiceInterface
             'backend'
         ]
     ];
-    private string $phpVersion;
 
     public function __construct(string $phpVersion)
     {
-        $this->phpVersion = $phpVersion;
         $this->configuration['build']['args']['PHP_IMAGE'] = sprintf('enjoys/php:%s-fpm-alpine', $phpVersion);
     }
 
-    public function getConfiguration()
+    private const USED_ENV_KEYS = [
+        TZ::class,
+        WORK_DIR::class,
+    ];
+
+    public function getUsedEnvKeys(): array
+    {
+        return self::USED_ENV_KEYS;
+    }
+
+    public function getConfiguration(): array
     {
         return $this->configuration;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function _after()
     {
         copyDirectoryWithFilesRecursive(
@@ -59,7 +74,6 @@ final class PhpService implements ServiceInterface
 
     public function _before()
     {
-        // TODO: Implement _before() method.
     }
 
     public function getServiceName(): string

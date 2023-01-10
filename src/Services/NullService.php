@@ -43,4 +43,8 @@ final class NullService implements ServiceInterface
         return $this->serviceName;
     }
 
+    public function getUsedEnvKeys(): array
+    {
+        return [];
+    }
 }

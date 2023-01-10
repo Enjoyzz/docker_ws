@@ -3,10 +3,12 @@
 declare(strict_types=1);
 
 
-namespace Enjoys\DockerWs\Configurator\Envs;
+namespace Enjoys\DockerWs\Services\Http\Env;
 
 
-final class ServerName extends EnvAbstract
+use Enjoys\DockerWs\Env;
+
+final class SERVER_NAME extends Env
 {
     protected string $name = 'SERVER_NAME';
     protected ?string $default = 'localhost';

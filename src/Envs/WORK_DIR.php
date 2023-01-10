@@ -3,13 +3,14 @@
 declare(strict_types=1);
 
 
-namespace Enjoys\DockerWs\Configurator\Envs;
+namespace Enjoys\DockerWs\Envs;
 
 
-final class WorkDir extends EnvAbstract
+use Enjoys\DockerWs\Env;
+
+final class WORK_DIR extends Env
 {
     protected string $name = 'WORK_DIR';
     protected ?string $default = '/var/www';
     protected bool $required = false;
-
 }

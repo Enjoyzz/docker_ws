@@ -6,12 +6,12 @@ declare(strict_types=1);
 namespace Enjoys\DockerWs;
 
 
-use Enjoys\DockerWs\DockerCompose;
 use Enjoys\DockerWs\Services\Db\Database;
 use Enjoys\DockerWs\Services\Http\HttpServer;
 use Enjoys\DockerWs\Services\Php\Php;
 use Enjoys\DockerWs\Services\SelectableService;
 use Enjoys\DockerWs\Services\ServiceInterface;
+use Enjoys\DotenvWriter\DotenvWriter;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
@@ -104,9 +104,15 @@ final class ConfigureCommand extends Command
             }
             $command->setApplication($this->application);
             $command->execute($input, $output);
-            $this->addService($command->getSelectedService());
+
+            DockerCompose::addService($command->getSelectedService());
         }
 
+        $this->createDockerEnv($input, $output);
+        $this->setNewNameForServices($input, $output);
+
+        $this->buildDockerComposeFile();
+        $this->writeDockerServicesSummary();
 
         writeFile(
             getenv('DOCKER_PATH') . '/docker-compose.yml',
@@ -142,11 +148,54 @@ final class ConfigureCommand extends Command
         $output->writeln('DOCKER_PATH: <comment>' . getenv('DOCKER_PATH') . '</comment>');
     }
 
-    private function addService(?ServiceInterface $service)
+    private function createDockerEnv(InputInterface $input, OutputInterface $output)
     {
-        if ($service === null) {
-            return;
+
+        $output->writeln([
+                '',
+                $this->helperFormatter->formatBlock(
+                    ['Setup variables used docker-compose.yml...'],
+                    'options=bold',
+                )
+            ]
+        );
+
+        $envs = [];
+        /** @var ServiceInterface $service */
+        foreach (DockerCompose::getServices() as $service) {
+            $envs = array_unique(array_merge_recursive($envs, $service->getUsedEnvKeys()));
         }
-        DockerCompose::addService($service);
+
+        $dotEnvWriter = new DotenvWriter(getenv('DOCKER_PATH') . '/.docker');
+
+
+        /** @var class-string<EnvInterface> $envClassString */
+        foreach ($envs as $envClassString) {
+            $env = new $envClassString();
+            $question = new Question(
+                $env->getQuestionString(),
+                $env->getDefault()
+            );
+
+            $autocompleter = $env->getAutocompleter();
+            if (is_iterable($autocompleter)) {
+                $question->setAutocompleterValues($autocompleter);
+            } else {
+                $question->setAutocompleterCallback($autocompleter);
+            }
+
+            $question->setValidator($env->getValidator());
+            $question->setNormalizer($env->getNormalizer());
+
+            $envValue = $helper->ask($input, $output, $question);
+
+            if ($envValue === null) {
+                continue;
+            }
+            $dotEnvWriter->setEnv($env->getName(), $envValue);
+        }
+
+        $dotEnvWriter->save();
     }
+
 }

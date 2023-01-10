@@ -8,6 +8,10 @@ namespace Enjoys\DockerWs\Services\Http\Nginx;
 
 
 
+use Enjoys\DockerWs\Envs\TZ;
+use Enjoys\DockerWs\Envs\WORK_DIR;
+use Enjoys\DockerWs\Services\Http\Env\PUBLIC_DIR;
+use Enjoys\DockerWs\Services\Http\Env\SERVER_NAME;
 use Enjoys\DockerWs\Services\Php\PhpService;
 use Enjoys\DockerWs\Services\ServiceInterface;
 
@@ -21,12 +25,12 @@ final class Nginx implements ServiceInterface
         PhpService::class
     ];
 
-//    private const USED_ENV_KEYS = [
-//        ServerName::class,
-//        Tz::class,
-//        WorkDir::class,
-//        PublicDir::class,
-//    ];
+    private const USED_ENV_KEYS = [
+        SERVER_NAME::class,
+        TZ::class,
+        WORK_DIR::class,
+        PUBLIC_DIR::class,
+    ];
 
     private array $configuration = [
         'image' => 'nginx:1.19-alpine',

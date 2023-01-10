@@ -3,15 +3,14 @@
 declare(strict_types=1);
 
 
-namespace Enjoys\DockerWs\Configurator\Envs;
+namespace Enjoys\DockerWs\Services\Http\Env;
 
 
-use Enjoys\DockerWs\Configurator\Envs\EnvAbstract;
+use Enjoys\DockerWs\Env;
 
-final class PublicDir extends EnvAbstract
+final class PUBLIC_DIR extends Env
 {
     protected string $name = 'PUBLIC_DIR';
     protected ?string $default = '${WORK_DIR}/public';
     protected bool $required = true;
-
 }

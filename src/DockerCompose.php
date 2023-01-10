@@ -27,9 +27,9 @@ final class DockerCompose
      */
     private static array $services = [];
 
-    public static function addService(ServiceInterface $service): void
+    public static function addService(?ServiceInterface $service): void
     {
-        if ($service instanceof NullService){
+        if ($service instanceof NullService || $service === null) {
             return;
         }
         self::$services[$service::class] = $service;
@@ -38,7 +38,6 @@ final class DockerCompose
     public static function build(): string
     {
         try {
-
             foreach (self::$services as $service) {
                 $service->_before();
             }

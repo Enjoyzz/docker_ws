@@ -6,6 +6,10 @@ declare(strict_types=1);
 namespace Enjoys\DockerWs\Services\Http\Apache\Version;
 
 
+use Enjoys\DockerWs\Envs\TZ;
+use Enjoys\DockerWs\Envs\WORK_DIR;
+use Enjoys\DockerWs\Services\Http\Env\PUBLIC_DIR;
+use Enjoys\DockerWs\Services\Http\Env\SERVER_NAME;
 use Enjoys\DockerWs\Services\ServiceInterface;
 
 final class Apache_v2_4 implements ServiceInterface, \Stringable
@@ -42,6 +46,17 @@ final class Apache_v2_4 implements ServiceInterface, \Stringable
         ],
 
     ];
+
+    private const USED_ENV_KEYS = [
+        SERVER_NAME::class,
+        WORK_DIR::class,
+        PUBLIC_DIR::class,
+    ];
+
+    public function getUsedEnvKeys(): array
+    {
+        return self::USED_ENV_KEYS;
+    }
 
     public function getConfiguration()
     {

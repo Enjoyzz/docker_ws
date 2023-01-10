@@ -13,14 +13,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
-use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
-
 final class Php extends Command implements SelectableService
 {
 
     private const PHP_VERSIONS = [
-        '7.4', '8.0', '8.1'
+        '8.2', '8.1', '8.0', '7.4',
+        //'7.3', '7.2', '7.1', '7.0', '5.6'
     ];
+
     private ?ServiceInterface $service = null;
 
 
@@ -30,18 +30,25 @@ final class Php extends Command implements SelectableService
         $question = new ChoiceQuestion(
             'Select PHP version (defaults to 8.0)',
             self::PHP_VERSIONS,
-            1
+            2
         );
         $question->setErrorMessage('Php version %s is invalid.');
 
         $phpVersion = $helper->ask($input, $output, $question);
         $output->writeln('Selected php version: ' . $phpVersion);
-        $this->service = new PhpService($phpVersion);
+        $service = new PhpService($phpVersion);
+        $this->setService($service);
     }
 
 
     public function getSelectedService(): ?ServiceInterface
     {
         return $this->service;
+    }
+
+
+    private function setService(?ServiceInterface $service): void
+    {
+        $this->service = $service;
     }
 }

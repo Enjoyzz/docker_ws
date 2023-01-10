@@ -6,18 +6,28 @@ namespace Enjoys\DockerWs\Services\Db\Mysql\Version;
 
 
 
+use Enjoys\DockerWs\Envs\TZ;
+use Enjoys\DockerWs\Services\Db\Mysql\Env\MYSQL_DATABASE;
+use Enjoys\DockerWs\Services\Db\Mysql\Env\MYSQL_PASSWORD;
+use Enjoys\DockerWs\Services\Db\Mysql\Env\MYSQL_USER;
 use Enjoys\DockerWs\Services\ServiceInterface;
 
 final class Mysql80 implements ServiceInterface
 {
     private string $serviceName = 'mysql';
 
-//    private const USED_ENV_KEYS = [
-//        DatabaseUser::class,
-//        DatabasePass::class,
-//        DatabaseName::class,
-//        Tz::class
-//    ];
+    private const USED_ENV_KEYS = [
+        MYSQL_USER::class,
+        MYSQL_PASSWORD::class,
+        MYSQL_DATABASE::class,
+        TZ::class
+    ];
+
+    public function getUsedEnvKeys(): array
+    {
+        return self::USED_ENV_KEYS;
+    }
+
 
     private array $configuration = [
         'image' => 'mysql:8.0',
@@ -34,9 +44,9 @@ final class Mysql80 implements ServiceInterface
             'seccomp:unconfined',
         ],
         'environment' => [
-            'MYSQL_USER' => '${DATABASE_USER:-user}',
-            'MYSQL_PASSWORD' => '${DATABASE_PASS:-pass}',
-            'MYSQL_DATABASE' => '${DATABASE_NAME:-dbname}',
+            'MYSQL_USER' => '${MYSQL_USER:-user}',
+            'MYSQL_PASSWORD' => '${MYSQL_PASSWORD:-pass}',
+            'MYSQL_DATABASE' => '${MYSQL_DATABASE:-dbname}',
             'MYSQL_RANDOM_ROOT_PASSWORD' => 'yes',
             'TZ' => '${TZ}',
         ],

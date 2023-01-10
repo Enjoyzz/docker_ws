@@ -3,10 +3,12 @@
 declare(strict_types=1);
 
 
-namespace Enjoys\DockerWs\Configurator\Envs;
+namespace Enjoys\DockerWs\Envs;
 
 
-final class Tz extends EnvAbstract
+use Enjoys\DockerWs\Env;
+
+final class TZ extends Env
 {
     protected string $name = 'TZ';
     protected ?string $default = 'UTC';

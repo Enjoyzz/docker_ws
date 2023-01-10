@@ -3,12 +3,11 @@
 declare(strict_types=1);
 
 
-namespace Enjoys\DockerWs\Configurator\Envs;
+namespace Enjoys\DockerWs;
 
 
-use Enjoys\DockerWs\Configurator\EnvInterface;
 
-abstract class EnvAbstract implements EnvInterface
+abstract class Env implements EnvInterface
 {
     protected string $name = '';
     protected ?string $default = null;

@@ -14,5 +14,10 @@ Get help information
 
 Linux
 ```shell
-__UNAME=$(id -un) __UID=$(id -u) docker-compose --file .docker/docker-compose.yml  up --build --remove-orphans -d
+__UNAME=$(id -un) __UID=$(id -u) __GID=$(id -g) docker-compose --file .docker/docker-compose.yml  up --build --remove-orphans -d
+```
+or 
+```shell
+export __UNAME=$(id -un) __UID=$(id -u) __GID=$(id -g) 
+docker-compose --file .docker/docker-compose.yml  up --build --remove-orphans -d
 ```

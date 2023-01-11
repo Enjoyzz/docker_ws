@@ -2,8 +2,12 @@ export __UNAME=$(shell id -un)
 export __UID=$(shell id -u)
 export __GID=$(shell id -g)
 
-DOCKER_PATH=./.docker
-DOCKER_COMPOSE=docker-compose --file $(DOCKER_PATH)/docker-compose.yml
+# @see https://stackoverflow.com/questions/1371261/get-current-directory-or-folder-name-without-the-full-path
+PROJECT_NAME?=$(shell pwd | grep -o '[^/]*$$')
+
+DOCKER_PATH?=./.docker
+DOCKER_COMPOSE=\
+	docker-compose -p $(PROJECT_NAME) --file $(DOCKER_PATH)/docker-compose.yml
 
 # @see https://www.thapaliya.com/en/writings/well-documented-makefiles/
 DEFAULT_GOAL := help

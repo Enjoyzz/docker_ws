@@ -60,6 +60,9 @@ final class ConfigureCommand extends Command
         ;
     }
 
+    /**
+     * @throws \Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->application = $this->getApplication();
@@ -123,7 +126,7 @@ final class ConfigureCommand extends Command
         copy(__DIR__.'/.gitignore.dist', getenv('DOCKER_PATH').'/.gitignore');
         copy(getenv('DOCKER_PATH').'/.env.docker', getenv('DOCKER_PATH').'/.env');
 
-        makeSymlink(getenv('DOCKER_PATH').'/docker.mk', __DIR__.'/docker.mk');
+        makeSymlink(getenv('DOCKER_PATH').'/Makefile', __DIR__.'/docker.mk');
 
         return Command::SUCCESS;
     }

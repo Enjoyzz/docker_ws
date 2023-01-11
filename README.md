@@ -22,4 +22,5 @@ export __UNAME=$(id -un) __UID=$(id -u) __GID=$(id -g)
 docker-compose --file .docker/docker-compose.yml  up --build --remove-orphans -d
 ```
 
-add to Makefile `-include .docker/docker.mk`
+add to root Makefile `-include .docker/Makefile`
+or run ` make -f .docker/Makefile`

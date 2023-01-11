@@ -88,7 +88,7 @@ final class ConfigureCommand extends Command
         $this->setRootPath($input, $output);
 
 
-        if (!$input->getOption('force') && file_exists(getenv('ROOT_PATH') . '/docker-compose.yml')) {
+        if (!$input->getOption('force') && file_exists(getenv('DOCKER_PATH') . '/docker-compose.yml')) {
             $output->writeln(
                 $this->helperFormatter->formatBlock(
                     ['Configuration is not possible, or delete the docker-compose.yml, or run the command with the --force flag'],

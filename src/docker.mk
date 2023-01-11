@@ -24,9 +24,15 @@ docker-init:
 docker-up: docker-init ## Start all docker containers. To only start one container, use SERVICE=<service>
 	@$(DOCKER_COMPOSE) up -d $(SERVICE)
 
+.PHONY: docker-start
+docker-start: docker-up
+
 .PHONY: docker-down
 docker-down: docker-init ## Stop all docker containers.
 	@$(DOCKER_COMPOSE) down --remove-orphans
+
+.PHONY: docker-stop
+docker-stop: docker-down
 
 .PHONY: docker-restart
 docker-restart: docker-down  ## Restart all docker containers.

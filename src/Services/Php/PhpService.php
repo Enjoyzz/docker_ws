@@ -21,7 +21,7 @@ final class PhpService implements ServiceInterface
 
     private array $configuration = [
         'build' => [
-            'context' => './.docker',
+            'context' => './',
             'dockerfile' => 'php/Dockerfile',
             'args' => [
                 'TZ' => '${TZ}',

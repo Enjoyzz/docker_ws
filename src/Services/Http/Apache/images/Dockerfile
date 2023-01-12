@@ -3,7 +3,7 @@ RUN apk update; \
     apk upgrade;
 
 # Copy apache vhost file to proxy php requests to php-fpm container
-COPY vhost.conf /usr/local/apache2/conf.d/vhost.conf
+COPY apache/vhost.conf /usr/local/apache2/conf.d/vhost.conf
 
 RUN { \
   echo 'Include conf.d/*.conf'; \

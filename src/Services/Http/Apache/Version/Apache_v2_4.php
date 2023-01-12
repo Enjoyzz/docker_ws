@@ -33,8 +33,8 @@ final class Apache_v2_4 implements ServiceInterface, \Stringable
 
     private array $configuration = [
         'build' => [
-            'context' => './apache',
-            'dockerfile' => 'Dockerfile'
+            'context' => './',
+            'dockerfile' => 'apache/Dockerfile'
         ],
         'environment' => [
             'PUBLIC_DIR' => '${PUBLIC_DIR}',

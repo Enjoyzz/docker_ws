@@ -7,8 +7,10 @@ export __GID=$(shell id -g)
 PROJECT_NAME?=$(shell pwd | grep -o '[^/]*$$')
 
 DOCKER_PATH?=./.docker
-DOCKER_COMPOSE=\
-	docker-compose -p $(PROJECT_NAME) --file $(DOCKER_PATH)/docker-compose.yml
+DOCKER_COMPOSE = docker-compose \
+	-p $(PROJECT_NAME) \
+	--file $(DOCKER_PATH)/docker-compose.yml \
+	--env-file $(DOCKER_PATH)/.env
 
 # @see https://www.thapaliya.com/en/writings/well-documented-makefiles/
 DEFAULT_GOAL := help

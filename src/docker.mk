@@ -24,7 +24,7 @@ DOCKER_COMPOSE = docker-compose \
 	--env-file $(DOCKER_PATH)/.env
 
 ifeq ("$(wildcard $(DOCKER_COMPOSE_YAML))","")
-	ERROR_DOCKER_COMPOSE_YAML = "Error! The file $(DOCKER_COMPOSE_YAML) not exists\nTry you run: $(GREEN)cd .. && make $(MAKECMDGOALS)$(NO_COLOR)"
+	ERROR_DOCKER_COMPOSE_YAML = "$(RED)Error! The file $(DOCKER_COMPOSE_YAML) not exists$(NO_COLOR)"
 endif
 
 # @see https://www.thapaliya.com/en/writings/well-documented-makefiles/

@@ -26,11 +26,19 @@ DEFAULT_GOAL := help
 help:
 	@awk 'BEGIN {FS = ":.*##"; printf "Usage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z0-9_-]+:.*?##/ { printf "  \033[36m%-40s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-
+.PHONY: check/docker-compose-file
 check/docker-compose-file:
 	@$(if $(ERROR_DOCKER_COMPOSE_YAML), (echo $(ERROR_DOCKER_COMPOSE_YAML); exit 1))
 
+.PHONY: check/all-checks
 check/all-checks: check/docker-compose-file
+
+.PHONY: debug/variables
+debug/variables:
+	@echo DOCKER_PATH = ${DOCKER_PATH}
+	@echo PROJECT_NAME = ${PROJECT_NAME}
+	@echo DOCKER_COMPOSE_YAML = ${DOCKER_COMPOSE_YAML}
+	@echo DOCKER_COMPOSE = ${DOCKER_COMPOSE}
 
 .PHONY: docker-init
 docker-init: check/all-checks

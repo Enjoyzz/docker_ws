@@ -43,13 +43,13 @@ docker-restart: docker-down  ## Restart all docker containers.
 .PHONY: docker-build
 docker-build: docker-init ## Build all docker images. Build a specific image by providing the service name via: make docker-build SERVICE=<service>
 	@$(DOCKER_COMPOSE) build --parallel $(SERVICE) && \
-	@$(DOCKER_COMPOSE) up -d --force-recreate $(SERVICE)
+	$(DOCKER_COMPOSE) up -d --force-recreate $(SERVICE)
 
 .PHONY: docker-build-from-scratch
 docker-build-from-scratch: docker-init ## Build all docker images from scratch, without cache etc. Build a specific image by providing the service name via: make docker-build SERVICE=<service>
 	@$(DOCKER_COMPOSE) rm -fs $(SERVICE) && \
-	@$(DOCKER_COMPOSE) build --pull --no-cache --parallel $(SERVICE) && \
-	@$(DOCKER_COMPOSE) up -d --force-recreate $(SERVICE)
+	$(DOCKER_COMPOSE) build --pull --no-cache --parallel $(SERVICE) && \
+	$(DOCKER_COMPOSE) up -d --force-recreate $(SERVICE)
 
 .PHONY: docker-clean
 docker-clean: ## Remove the .env file for docker

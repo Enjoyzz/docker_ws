@@ -4,12 +4,13 @@ export __UID=$(shell id -u)
 export __GID=$(shell id -g)
 
 # @see https://stackoverflow.com/questions/1371261/get-current-directory-or-folder-name-without-the-full-path
-PROJECT_NAME?=$(shell pwd | grep -o '[^/]*$$')
-
-DOCKER_PATH?=./.docker
+PROJECT_NAME ?= $(shell pwd | grep -o '[^/]*$$')
+PWD ?= $(shell pwd)
+DOCKER_PATH ?= $(PWD)/.docker
+DOCKER_COMPOSE_YAML ?= $(DOCKER_PATH)/docker-compose.yml
 DOCKER_COMPOSE = docker-compose \
 	-p $(PROJECT_NAME) \
-	--file $(DOCKER_PATH)/docker-compose.yml \
+	--file $(DOCKER_COMPOSE_YAML) \
 	--env-file $(DOCKER_PATH)/.env
 
 # @see https://www.thapaliya.com/en/writings/well-documented-makefiles/
@@ -20,7 +21,6 @@ help:
 .PHONY: docker-init
 docker-init:
 	@cp $(DOCKER_PATH)/.env.docker $(DOCKER_PATH)/.env
-
 
 .PHONY: docker-up
 docker-up: docker-init ## Start all docker containers. To only start one container, use SERVICE=<service>
@@ -58,9 +58,4 @@ docker-clean: ## Remove the .env file for docker
 .PHONY: docker-prune
 docker-prune: ## Remove unused docker resources via 'docker system prune -a -f --volumes'
 	@docker system prune -a -f --volumes
-
-
-
-
-
 

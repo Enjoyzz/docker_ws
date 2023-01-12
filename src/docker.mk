@@ -13,13 +13,23 @@ DOCKER_COMPOSE = docker-compose \
 	--file $(DOCKER_COMPOSE_YAML) \
 	--env-file $(DOCKER_PATH)/.env
 
+ifeq ("$(wildcard $(DOCKER_COMPOSE_YAML))","")
+	ERROR_DOCKER_COMPOSE_YAML = The file $(DOCKER_COMPOSE_YAML) not exists - Try you run `cd .. && make $(MAKECMDGOALS)`?
+endif
+
 # @see https://www.thapaliya.com/en/writings/well-documented-makefiles/
 DEFAULT_GOAL := help
 help:
 	@awk 'BEGIN {FS = ":.*##"; printf "Usage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z0-9_-]+:.*?##/ { printf "  \033[36m%-40s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
+
+check/docker-compose-file:
+	@$(if $(ERROR_DOCKER_COMPOSE_YAML),$(error $(ERROR_DOCKER_COMPOSE_YAML),))
+
+check/all-checks: check/docker-compose-file
+
 .PHONY: docker-init
-docker-init:
+docker-init: check/all-checks
 	@cp $(DOCKER_PATH)/.env.docker $(DOCKER_PATH)/.env
 
 .PHONY: docker-up
@@ -58,4 +68,3 @@ docker-clean: ## Remove the .env file for docker
 .PHONY: docker-prune
 docker-prune: ## Remove unused docker resources via 'docker system prune -a -f --volumes'
 	@docker system prune -a -f --volumes
-

@@ -1,11 +1,5 @@
 ##@ Docker compose commands
 
-# bash colors
-RED:=\033[0;31m
-GREEN:=\033[0;32m
-YELLOW:=\033[0;33m
-NO_COLOR:=\033[0m
-
 export __UNAME = $(shell id -un)
 export __UID = $(shell id -u)
 export __GID = $(shell id -g)
@@ -24,7 +18,7 @@ DOCKER_COMPOSE = docker-compose \
 	--env-file $(DOCKER_PATH)/.env
 
 ifeq ("$(wildcard $(DOCKER_COMPOSE_YAML))","")
-	ERROR_DOCKER_COMPOSE_YAML = "$(RED)Error! The file $(DOCKER_COMPOSE_YAML) not exists$(NO_COLOR)"
+	ERROR_DOCKER_COMPOSE_YAML = "\033[0;31mError! The file $(DOCKER_COMPOSE_YAML) not exists\033[0m"
 endif
 
 # @see https://www.thapaliya.com/en/writings/well-documented-makefiles/

@@ -15,10 +15,8 @@ export __GID = $(shell id -g)
 export COMPOSE_DOCKER_CLI_BUILD ?= 1
 export DOCKER_BUILDKIT ?= 1
 
-# @see https://stackoverflow.com/questions/1371261/get-current-directory-or-folder-name-without-the-full-path
-PROJECT_NAME ?= $(shell pwd | grep -o '[^/]*$$')
-PWD ?= $(shell pwd)
-DOCKER_PATH ?= $(PWD)/.docker
+DOCKER_PATH = $(abspath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+PROJECT_NAME ?= $(notdir  $(abspath $(DOCKER_PATH)/..))
 DOCKER_COMPOSE_YAML ?= $(DOCKER_PATH)/docker-compose.yml
 DOCKER_COMPOSE = docker-compose \
 	-p $(PROJECT_NAME) \

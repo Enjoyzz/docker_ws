@@ -17,6 +17,23 @@ DOCKER_COMPOSE = docker-compose \
 	--file $(DOCKER_COMPOSE_YAML) \
 	--env-file $(DOCKER_PATH)/.env
 
+# OS is a defined variable for WIN systems, so "uname" will not be executed
+OS?=$(shell uname)
+# Values of OS:
+#   Windows => Windows_NT
+#   Mac 	=> Darwin
+#   Linux 	=> Linux
+ifeq ($(OS),Windows_NT)
+	# Windows requires the .exe extension, otherwise the entry is ignored
+	# @see https://stackoverflow.com/a/60318554/413531
+    SHELL := bash.exe
+	# Export MSYS_NO_PATHCONV=1 as environment variable to avoid automatic path conversion
+	# (the export does only apply locally to `make` and the scripts that are invoked,
+	# it does not affect the global environment)
+    # @see http://www.pascallandau.com/blog/setting-up-git-bash-mingw-msys2-on-windows/#fixing-the-path-conversion-issue-for-mingw-msys2
+	export MSYS_NO_PATHCONV=1
+endif
+
 ifeq ("$(wildcard $(DOCKER_COMPOSE_YAML))","")
 	ERROR_DOCKER_COMPOSE_YAML = "\033[0;31mError! The file $(DOCKER_COMPOSE_YAML) not exists\033[0m"
 endif
@@ -35,6 +52,8 @@ check/all-checks: check/docker-compose-file
 
 .PHONY: debug/variables
 debug/variables:
+	@echo OS = ${OS}
+	@echo SHELL = ${SHELL}
 	@echo DOCKER_PATH = ${DOCKER_PATH}
 	@echo PROJECT_NAME = ${PROJECT_NAME}
 	@echo DOCKER_COMPOSE_YAML = ${DOCKER_COMPOSE_YAML}

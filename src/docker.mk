@@ -1,7 +1,12 @@
 ##@ Docker compose commands
-export __UNAME=$(shell id -un)
-export __UID=$(shell id -u)
-export __GID=$(shell id -g)
+export __UNAME = $(shell id -un)
+export __UID = $(shell id -u)
+export __GID = $(shell id -g)
+
+# Enable buildkit for docker and docker-compose by default for every environment.
+# For specific environments (e.g. MacBook with Apple Silicon M1 CPU) it should be turned off to work stable
+export COMPOSE_DOCKER_CLI_BUILD ?= 1
+export DOCKER_BUILDKIT ?= 1
 
 # @see https://stackoverflow.com/questions/1371261/get-current-directory-or-folder-name-without-the-full-path
 PROJECT_NAME ?= $(shell pwd | grep -o '[^/]*$$')
@@ -30,6 +35,7 @@ check/all-checks: check/docker-compose-file
 
 .PHONY: docker-init
 docker-init: check/all-checks
+	echo `env | grep DOCKER`
 	@cp $(DOCKER_PATH)/.env.docker $(DOCKER_PATH)/.env
 
 .PHONY: docker-up

@@ -35,7 +35,6 @@ check/all-checks: check/docker-compose-file
 
 .PHONY: docker-init
 docker-init: check/all-checks
-	echo `env | grep DOCKER`
 	@cp $(DOCKER_PATH)/.env.docker $(DOCKER_PATH)/.env
 
 .PHONY: docker-up
@@ -54,7 +53,7 @@ docker-stop: docker-down
 
 .PHONY: docker-restart
 docker-restart: docker-down  ## Restart all docker containers.
-	@$(DOCKER_COMPOSE) up -d
+	@$(MAKE) -s docker-up
 
 .PHONY: docker-build
 docker-build: docker-init ## Build all docker images. Build a specific image by providing the service name via: make docker-build SERVICE=<service>

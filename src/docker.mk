@@ -12,10 +12,11 @@ export DOCKER_BUILDKIT ?= 1
 DOCKER_PATH = $(patsubst %/, %, $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 PROJECT_NAME ?= $(notdir  $(abspath $(DOCKER_PATH)/..))
 DOCKER_COMPOSE_YAML ?= $(DOCKER_PATH)/docker-compose.yml
+DOCKER_ENV_FILE ?= $(DOCKER_PATH)/.env
 DOCKER_COMPOSE = docker-compose \
 	-p $(PROJECT_NAME) \
 	--file $(DOCKER_COMPOSE_YAML) \
-	--env-file $(DOCKER_PATH)/.env
+	--env-file $(DOCKER_ENV_FILE)
 
 # OS is a defined variable for WIN systems, so "uname" will not be executed
 OS?=$(shell uname)
@@ -35,8 +36,13 @@ ifeq ($(OS),Windows_NT)
 endif
 
 ifeq ("$(wildcard $(DOCKER_COMPOSE_YAML))","")
-	ERROR_DOCKER_COMPOSE_YAML = "\033[0;31mError! The file $(DOCKER_COMPOSE_YAML) not exists\033[0m"
+	ERROR_DOCKER_COMPOSE_YAML = "\033[7;31mError! The file $(DOCKER_COMPOSE_YAML) not exists\033[0m"
 endif
+
+ifeq ("$(wildcard $(DOCKER_ENV_FILE))","")
+	ERROR_DOCKER_ENV_FILE = "\e[0;31mDocker-init was not called, run: \e[0m\e[1;96m$(MAKE) docker-init\e[0m"
+endif
+
 
 # @see https://www.thapaliya.com/en/writings/well-documented-makefiles/
 .DEFAULT_GOAL := help
@@ -47,8 +53,12 @@ help:
 check/docker-compose-file:
 	@$(if $(ERROR_DOCKER_COMPOSE_YAML), (echo $(ERROR_DOCKER_COMPOSE_YAML); exit 1))
 
+.PHONY: check/docker-env-file
+check/docker-env-file:
+	@$(if $(ERROR_DOCKER_ENV_FILE), (echo $(ERROR_DOCKER_ENV_FILE); exit 1))
+
 .PHONY: check/all-checks
-check/all-checks: check/docker-compose-file
+check/all-checks: check/docker-compose-file check/docker-env-file
 
 .PHONY: debug/variables
 debug/variables:
@@ -60,18 +70,18 @@ debug/variables:
 	@echo DOCKER_COMPOSE = ${DOCKER_COMPOSE}
 
 .PHONY: docker-init
-docker-init: check/all-checks
+docker-init:
 	@cp $(DOCKER_PATH)/.env.docker $(DOCKER_PATH)/.env
 
 .PHONY: docker-up
-docker-up: docker-init ## Start all docker containers. To only start one container, use SERVICE=<service>
+docker-up: check/all-checks ## Start all docker containers. To only start one container, use SERVICE=<service>
 	@$(DOCKER_COMPOSE) up -d $(SERVICE)
 
 .PHONY: docker-start
 docker-start: docker-up
 
 .PHONY: docker-down
-docker-down: docker-init ## Stop all docker containers.
+docker-down: check/all-checks ## Stop all docker containers.
 	@$(DOCKER_COMPOSE) down --remove-orphans
 
 .PHONY: docker-stop
@@ -82,12 +92,12 @@ docker-restart: docker-down  ## Restart all docker containers.
 	@$(MAKE) -s docker-up
 
 .PHONY: docker-build
-docker-build: docker-init ## Build all docker images. Build a specific image by providing the service name via: make docker-build SERVICE=<service>
+docker-build: check/all-checks ## Build all docker images. Build a specific image by providing the service name via: make docker-build SERVICE=<service>
 	@$(DOCKER_COMPOSE) build --parallel $(SERVICE) && \
 	$(DOCKER_COMPOSE) up -d --force-recreate $(SERVICE)
 
 .PHONY: docker-build-from-scratch
-docker-build-from-scratch: docker-init ## Build all docker images from scratch, without cache etc. Build a specific image by providing the service name via: make docker-build SERVICE=<service>
+docker-build-from-scratch: check/all-checks ## Build all docker images from scratch, without cache etc. Build a specific image by providing the service name via: make docker-build SERVICE=<service>
 	@$(DOCKER_COMPOSE) rm -fs $(SERVICE) && \
 	$(DOCKER_COMPOSE) build --pull --no-cache --parallel $(SERVICE) && \
 	$(DOCKER_COMPOSE) up -d --force-recreate $(SERVICE)

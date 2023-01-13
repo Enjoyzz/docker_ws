@@ -119,7 +119,7 @@ docker-build-from-scratch: check/all-checks ## Build all docker images from scra
 
 .PHONY: docker-clean
 docker-clean: ## Remove the .env file for docker
-	@rm -f $(DOCKER_PATH)/.env
+	@rm -f $(DOCKER_ENV_FILE)
 
 .PHONY: docker-prune
 docker-prune: ## Remove unused docker resources via 'docker system prune -a -f --volumes'

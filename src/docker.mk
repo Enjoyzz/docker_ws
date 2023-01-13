@@ -41,6 +41,7 @@ export DOCKER_BUILDKIT ?= 1
 DOCKER_PATH = $(patsubst %/, %, $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 PROJECT_NAME ?= $(notdir  $(abspath $(DOCKER_PATH)/..))
 DOCKER_COMPOSE_YAML ?= $(DOCKER_PATH)/docker-compose.yml
+DOCKER_ENV_FILE_DIST = $(DOCKER_PATH)/.env.docker
 DOCKER_ENV_FILE ?= $(DOCKER_PATH)/.env
 DOCKER_COMPOSE = docker-compose \
 	-p $(PROJECT_NAME) \
@@ -86,7 +87,7 @@ debug/variables:
 
 .PHONY: docker-init
 docker-init:
-	@cp $(DOCKER_PATH)/.env.docker $(DOCKER_ENV_FILE)
+	@cp $(DOCKER_ENV_FILE_DIST) $(DOCKER_ENV_FILE)
 
 .PHONY: docker-up
 docker-up: check/all-checks ## Start all docker containers. To only start one container, use SERVICE=<service>

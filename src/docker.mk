@@ -40,13 +40,13 @@ ifeq ("$(wildcard $(DOCKER_COMPOSE_YAML))","")
 endif
 
 ifeq ("$(wildcard $(DOCKER_ENV_FILE))","")
-	ERROR_DOCKER_ENV_FILE = "\e[0;31mDocker-init was not called, run: \e[0m\e[1;96m$(MAKE) docker-init\e[0m"
+	ERROR_DOCKER_ENV_FILE = "Docker-init was not called, run: \e[7;37m make docker-init \e[0m"
 endif
 
 
 # @see https://www.thapaliya.com/en/writings/well-documented-makefiles/
 .DEFAULT_GOAL := help
-help:
+help: docker-init
 	@awk 'BEGIN {FS = ":.*##"; printf "Usage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z0-9_-]+:.*?##/ { printf "  \033[36m%-40s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
 .PHONY: check/docker-compose-file

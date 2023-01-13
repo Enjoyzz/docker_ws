@@ -71,7 +71,7 @@ debug/variables:
 
 .PHONY: docker-init
 docker-init:
-	@cp $(DOCKER_PATH)/.env.docker $(DOCKER_PATH)/.env
+	@cp $(DOCKER_PATH)/.env.docker $(DOCKER_ENV_FILE)
 
 .PHONY: docker-up
 docker-up: check/all-checks ## Start all docker containers. To only start one container, use SERVICE=<service>

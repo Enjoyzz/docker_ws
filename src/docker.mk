@@ -1,22 +1,20 @@
 ##@ Docker compose commands
 
-export __UNAME = $(shell id -un)
-export __UID = $(shell id -u)
-export __GID = $(shell id -g)
+__UNAME = $(shell id -un)
+__UID = $(shell id -u)
+__GID = $(shell id -g)
 
-# Enable buildkit for docker and docker-compose by default for every environment.
-# For specific environments (e.g. MacBook with Apple Silicon M1 CPU) it should be turned off to work stable
-export COMPOSE_DOCKER_CLI_BUILD ?= 1
-export DOCKER_BUILDKIT ?= 1
+ifeq ("$(__UID)","0")
+	__UID = 1000
+endif
 
-DOCKER_PATH = $(patsubst %/, %, $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
-PROJECT_NAME ?= $(notdir  $(abspath $(DOCKER_PATH)/..))
-DOCKER_COMPOSE_YAML ?= $(DOCKER_PATH)/docker-compose.yml
-DOCKER_ENV_FILE ?= $(DOCKER_PATH)/.env
-DOCKER_COMPOSE = docker-compose \
-	-p $(PROJECT_NAME) \
-	--file $(DOCKER_COMPOSE_YAML) \
-	--env-file $(DOCKER_ENV_FILE)
+ifeq ("$(__GID)","0")
+	__GID = 1000
+endif
+
+export __UNAME
+export __UID
+export __GID
 
 # OS is a defined variable for WIN systems, so "uname" will not be executed
 OS?=$(shell uname)
@@ -34,6 +32,20 @@ ifeq ($(OS),Windows_NT)
     # @see http://www.pascallandau.com/blog/setting-up-git-bash-mingw-msys2-on-windows/#fixing-the-path-conversion-issue-for-mingw-msys2
 	export MSYS_NO_PATHCONV=1
 endif
+
+# Enable buildkit for docker and docker-compose by default for every environment.
+# For specific environments (e.g. MacBook with Apple Silicon M1 CPU) it should be turned off to work stable
+export COMPOSE_DOCKER_CLI_BUILD ?= 1
+export DOCKER_BUILDKIT ?= 1
+
+DOCKER_PATH = $(patsubst %/, %, $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+PROJECT_NAME ?= $(notdir  $(abspath $(DOCKER_PATH)/..))
+DOCKER_COMPOSE_YAML ?= $(DOCKER_PATH)/docker-compose.yml
+DOCKER_ENV_FILE ?= $(DOCKER_PATH)/.env
+DOCKER_COMPOSE = docker-compose \
+	-p $(PROJECT_NAME) \
+	--file $(DOCKER_COMPOSE_YAML) \
+	--env-file $(DOCKER_ENV_FILE)
 
 ifeq ("$(wildcard $(DOCKER_COMPOSE_YAML))","")
 	ERROR_DOCKER_COMPOSE_YAML = "\033[7;31mError! The file $(DOCKER_COMPOSE_YAML) not exists\033[0m"
@@ -64,6 +76,9 @@ check/all-checks: check/docker-compose-file check/docker-env-file
 debug/variables:
 	@echo OS = ${OS}
 	@echo SHELL = ${SHELL}
+	@echo __UNAME = ${__UNAME}
+	@echo __UID = ${__UID}
+	@echo __GID = ${__GID}
 	@echo DOCKER_PATH = ${DOCKER_PATH}
 	@echo PROJECT_NAME = ${PROJECT_NAME}
 	@echo DOCKER_COMPOSE_YAML = ${DOCKER_COMPOSE_YAML}

@@ -29,10 +29,7 @@ $application = new Application();
 
 
 $application->addCommands([
-    new Configure(),
-    new UpCommand(),
-    new DownCommand(),
-    new RestartCommand(),
+    new \Enjoys\DockerWs\ConfigureCommand('configure')
 ]);
 
 $application->run();

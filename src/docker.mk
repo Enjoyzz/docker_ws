@@ -9,7 +9,7 @@ export __GID = $(shell id -g)
 export COMPOSE_DOCKER_CLI_BUILD ?= 1
 export DOCKER_BUILDKIT ?= 1
 
-DOCKER_PATH = $(abspath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+DOCKER_PATH = $(patsubst %/, %, $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 PROJECT_NAME ?= $(notdir  $(abspath $(DOCKER_PATH)/..))
 DOCKER_COMPOSE_YAML ?= $(DOCKER_PATH)/docker-compose.yml
 DOCKER_COMPOSE = docker-compose \

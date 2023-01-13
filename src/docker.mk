@@ -1,21 +1,5 @@
 ##@ Docker compose commands
 
-__UNAME = $(shell id -un)
-__UID = $(shell id -u)
-__GID = $(shell id -g)
-
-ifeq ("$(__UID)","0")
-	__UID = 1000
-endif
-
-ifeq ("$(__GID)","0")
-	__GID = 1000
-endif
-
-export __UNAME
-export __UID
-export __GID
-
 # OS is a defined variable for WIN systems, so "uname" will not be executed
 OS?=$(shell uname)
 # Values of OS:
@@ -77,9 +61,6 @@ check/all-checks: check/docker-compose-file check/docker-env-file
 debug/variables:
 	@echo OS = ${OS}
 	@echo SHELL = ${SHELL}
-	@echo __UNAME = ${__UNAME}
-	@echo __UID = ${__UID}
-	@echo __GID = ${__GID}
 	@echo DOCKER_PATH = ${DOCKER_PATH}
 	@echo PROJECT_NAME = ${PROJECT_NAME}
 	@echo DOCKER_COMPOSE_YAML = ${DOCKER_COMPOSE_YAML}

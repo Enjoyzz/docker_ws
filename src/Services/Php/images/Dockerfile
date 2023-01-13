@@ -15,15 +15,20 @@ COPY php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY php/php.ini /usr/local/etc/php/conf.d/40-custom.ini
 COPY php/sendmail /usr/local/bin
 
-ARG __UNAME
-ARG __UID
-RUN echo ${__UNAME}:${__UID}
-RUN adduser --system ${__UNAME} --uid ${__UID}
+ARG USER_ID
+ARG GROUP_ID
+ARG USER_NAME
+ARG GROUP_NAME
+ARG WORK_DIR='/var/www'
 
-ARG WORK_DIR="/var/www"
+RUN addgroup -g ${GROUP_ID} ${GROUP_NAME} && \
+    adduser -D -u ${USER_ID} -s /bin/bash ${USER_NAME} -G ${GROUP_NAME} && \
+    mkdir -p ${WORK_DIR} && \
+    chown ${USER_NAME}: ${WORK_DIR}
+
 WORKDIR ${WORK_DIR}
 
-USER ${__UNAME}
+USER ${APP_USER_NAME}
 
 ENV ENV=/etc/profile
 COPY php/alias.sh /etc/profile.d/alias.sh

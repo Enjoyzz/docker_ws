@@ -6,6 +6,10 @@ declare(strict_types=1);
 namespace Enjoys\DockerWs;
 
 
+use Enjoys\DockerWs\Envs\GROUP_ID;
+use Enjoys\DockerWs\Envs\GROUP_NAME;
+use Enjoys\DockerWs\Envs\USER_ID;
+use Enjoys\DockerWs\Envs\USER_NAME;
 use Enjoys\DockerWs\Services\Db\Database;
 use Enjoys\DockerWs\Services\Db\Mysql\Version\Mysql57;
 use Enjoys\DockerWs\Services\Db\Mysql\Version\Mysql80;
@@ -171,7 +175,12 @@ final class ConfigureCommand extends Command
             ]
         );
 
-        $envs = [];
+        $envs = [
+            USER_NAME::class,
+            GROUP_NAME::class,
+            USER_ID::class,
+            GROUP_ID::class
+        ];
         /** @var ServiceInterface $service */
         foreach (DockerCompose::getServices() as $service) {
             $envs = array_unique(array_merge_recursive($envs, $service->getUsedEnvKeys()));

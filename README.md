@@ -26,7 +26,7 @@ add to root Makefile
 ```makefile
 -include .docker/Makefile
 ```
-and run (show all targets (commands))
+and run for show all targets (commands)
 ```shell
 make
 ```

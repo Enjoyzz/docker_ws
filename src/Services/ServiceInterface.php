@@ -11,6 +11,8 @@ interface ServiceInterface
 
     public function getConfiguration();
 
+    public function getType(): string;
+
     public function _after();
 
     public function _before();

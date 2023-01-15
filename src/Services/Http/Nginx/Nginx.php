@@ -6,8 +6,6 @@ declare(strict_types=1);
 namespace Enjoys\DockerWs\Services\Http\Nginx;
 
 
-
-
 use Enjoys\DockerWs\DockerCompose;
 use Enjoys\DockerWs\Envs\TZ;
 use Enjoys\DockerWs\Envs\WORK_DIR;
@@ -22,6 +20,11 @@ use function Enjoys\FileSystem\createDirectory;
 final class Nginx implements ServiceInterface
 {
     private string $serviceName = 'nginx';
+
+    public function getType(): string
+    {
+        return 'nginx';
+    }
 
     private const POSSIBLE_DEPEND_SERVICES = [
         PhpService::class
@@ -97,7 +100,6 @@ final class Nginx implements ServiceInterface
         );
 
         createDirectory(getenv('DOCKER_PATH') . '/.data/logs/nginx');
-
     }
 
     public function _before()

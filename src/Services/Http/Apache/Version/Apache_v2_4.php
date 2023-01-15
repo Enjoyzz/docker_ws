@@ -26,6 +26,11 @@ final class Apache_v2_4 implements ServiceInterface, \Stringable
         return 'Apache v2.4';
     }
 
+    public function getType(): string
+    {
+        return 'apache';
+    }
+
     private const POSSIBLE_DEPEND_SERVICES = [
         PhpService::class
     ];

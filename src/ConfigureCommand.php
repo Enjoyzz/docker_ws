@@ -255,15 +255,24 @@ final class ConfigureCommand extends Command
         foreach (DockerCompose::getServices() as $serviceClassString => $service) {
             switch ($serviceClassString) {
                 case PhpService::class:
-                    $services['php'] = $service->getServiceName();
+                    $services['php'] = [
+                        'service_name' => $service->getServiceName(),
+                        'type' => $service->getType()
+                    ];
                     break;
                 case Mysql57::class:
                 case Mysql80::class:
-                    $services['db'] = $service->getServiceName();
+                    $services['db'] = [
+                        'service_name' => $service->getServiceName(),
+                        'type' => $service->getType()
+                    ];
                     break;
                 case Nginx::class:
                 case Apache_v2_4::class:
-                    $services['http'] = $service->getServiceName();
+                    $services['http'] = [
+                        'service_name' => $service->getServiceName(),
+                        'type' => $service->getType()
+                    ];
                     break;
             }
         }

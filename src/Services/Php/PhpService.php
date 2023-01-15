@@ -19,6 +19,11 @@ final class PhpService implements ServiceInterface
 {
     private string $serviceName = 'php';
 
+    public function getType(): string
+    {
+        return 'php';
+    }
+
     private array $configuration = [
         'build' => [
             'context' => './',

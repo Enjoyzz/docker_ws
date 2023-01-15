@@ -17,6 +17,11 @@ final class NullService implements ServiceInterface
         $this->serviceName = $serviceName;
     }
 
+    public function getType(): string
+    {
+        return '';
+    }
+
     public function __toString(): string
     {
         return $this->serviceName;

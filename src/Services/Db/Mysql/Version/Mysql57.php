@@ -16,6 +16,11 @@ final class Mysql57 implements ServiceInterface
 {
     private string $serviceName = 'mysql';
 
+    public function getType(): string
+    {
+        return 'mysql';
+    }
+
     private const USED_ENV = [
         MYSQL_USER::class,
         MYSQL_PASSWORD::class,

@@ -8,8 +8,6 @@ namespace Enjoys\DockerWs\Services\Php;
 
 use Enjoys\DockerWs\Envs\TZ;
 use Enjoys\DockerWs\Envs\WORK_DIR;
-use Enjoys\DockerWs\Services\Http\Env\PUBLIC_DIR;
-use Enjoys\DockerWs\Services\Http\Env\SERVER_NAME;
 use Enjoys\DockerWs\Services\ServiceInterface;
 
 use function Enjoys\FileSystem\copyDirectoryWithFilesRecursive;
@@ -22,6 +20,14 @@ final class PhpService implements ServiceInterface
     public function getType(): string
     {
         return 'php';
+    }
+
+
+    private string $dependOnCondition = 'service_started';
+
+    public function getDependsOnCondition(): string
+    {
+        return $this->dependOnCondition;
     }
 
     private array $configuration = [

@@ -13,6 +13,8 @@ interface ServiceInterface
 
     public function getType(): string;
 
+    public function getDependsOnCondition(): string;
+
     public function _after();
 
     public function _before();

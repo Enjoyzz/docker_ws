@@ -29,17 +29,14 @@ final class NullService implements ServiceInterface
 
     public function getConfiguration()
     {
-        // TODO: Implement getConfiguration() method.
     }
 
     public function _after()
     {
-        // TODO: Implement _after() method.
     }
 
     public function _before()
     {
-        // TODO: Implement _before() method.
     }
 
 
@@ -55,6 +52,13 @@ final class NullService implements ServiceInterface
 
     public function setServiceName(string $serviceName): void
     {
-        // TODO: Implement setServiceName() method.
     }
+
+    private string $dependOnCondition = 'service_started';
+
+    public function getDependsOnCondition(): string
+    {
+        return $this->dependOnCondition;
+    }
+
 }

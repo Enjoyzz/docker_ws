@@ -21,6 +21,14 @@ final class Mysql80 implements ServiceInterface
         return 'mysql';
     }
 
+
+    private string $dependOnCondition = 'service_healthy';
+
+    public function getDependsOnCondition(): string
+    {
+        return $this->dependOnCondition;
+    }
+
     private const USED_ENV = [
         MYSQL_USER::class,
         MYSQL_PASSWORD::class,
@@ -44,6 +52,15 @@ final class Mysql80 implements ServiceInterface
         ],
         'ports' => [
             '4308:3306',
+        ],
+        'healthcheck' => [
+            'test' => [
+                "CMD-SHELL",
+                'mysql --database=$$MYSQL_DATABASE --user=$$MYSQL_USER --password=$$MYSQL_PASSWORD --execute="SELECT count(table_name) > 0 FROM information_schema.tables;" --skip-column-names -B || exit 1'
+            ],
+            'interval' => '30s',
+            'timeout' => '10s',
+            'retries' => 5,
         ],
         'security_opt' => [
             'seccomp:unconfined',

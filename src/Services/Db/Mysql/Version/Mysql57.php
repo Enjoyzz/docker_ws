@@ -16,6 +16,14 @@ final class Mysql57 implements ServiceInterface
 {
     private string $serviceName = 'mysql';
 
+
+    private string $dependOnCondition = 'service_healthy';
+
+    public function getDependsOnCondition(): string
+    {
+        return $this->dependOnCondition;
+    }
+
     public function getType(): string
     {
         return 'mysql';
@@ -46,6 +54,15 @@ final class Mysql57 implements ServiceInterface
         ],
         'security_opt' => [
             'seccomp:unconfined',
+        ],
+        'healthcheck' => [
+            'test' => [
+                "CMD-SHELL",
+                'mysql --database=$$MYSQL_DATABASE --user=$$MYSQL_USER --password=$$MYSQL_PASSWORD --execute="SELECT count(table_name) > 0 FROM information_schema.tables;" --skip-column-names -B || exit 1'
+            ],
+            'interval' => '30s',
+            'timeout' => '10s',
+            'retries' => 5,
         ],
         'environment' => [
             'MYSQL_USER' => '${MYSQL_USER}',

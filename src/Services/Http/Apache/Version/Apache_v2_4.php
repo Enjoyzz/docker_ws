@@ -7,8 +7,9 @@ namespace Enjoys\DockerWs\Services\Http\Apache\Version;
 
 
 use Enjoys\DockerWs\DockerCompose;
-use Enjoys\DockerWs\Envs\TZ;
 use Enjoys\DockerWs\Envs\WORK_DIR;
+use Enjoys\DockerWs\Services\Db\Mysql\Version\Mysql57;
+use Enjoys\DockerWs\Services\Db\Mysql\Version\Mysql80;
 use Enjoys\DockerWs\Services\Http\Env\PUBLIC_DIR;
 use Enjoys\DockerWs\Services\Http\Env\SERVER_NAME;
 use Enjoys\DockerWs\Services\Php\PhpService;
@@ -32,8 +33,17 @@ final class Apache_v2_4 implements ServiceInterface, \Stringable
     }
 
     private const POSSIBLE_DEPEND_SERVICES = [
-        PhpService::class
+        PhpService::class,
+        Mysql80::class,
+        Mysql57::class
     ];
+
+    private string $dependOnCondition = 'service_started';
+
+    public function getDependsOnCondition(): string
+    {
+        return $this->dependOnCondition;
+    }
 
 
     private array $configuration = [
@@ -78,6 +88,7 @@ final class Apache_v2_4 implements ServiceInterface, \Stringable
         return $this->configuration;
     }
 
+
     public function _after()
     {
         copyDirectoryWithFilesRecursive(
@@ -94,9 +105,12 @@ final class Apache_v2_4 implements ServiceInterface, \Stringable
 
         foreach ($registeredServices as $service) {
             if (in_array($service, self::POSSIBLE_DEPEND_SERVICES, true)) {
-                $this->configuration['depends_on'][] = DockerCompose::getServiceByKey($service)->getServiceName();
+                $serviceClass = DockerCompose::getServiceByKey($service);
+                $this->configuration['depends_on'][$serviceClass->getServiceName(
+                )]['condition'] = $serviceClass->getDependsOnCondition();
             }
         }
+
 
         $phpService = DockerCompose::getServiceByKey(PhpService::class);
         $this->configuration['environment']['FASTCGI_PASS'] = sprintf('%s:9000', $phpService->getServiceName());

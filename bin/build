@@ -24,7 +24,7 @@ $opt = getopt('v:', ['nozip']);
 `composer install --no-dev --prefer-dist --optimize-autoloader`;
 
 $pharName = "docker-ws.phar";
-$pharFile = getcwd() . '/' . $pharName;
+$pharFile = __ROOT__ . '/' . $pharName;
 if (file_exists($pharFile)) {
     unlink($pharFile);
 }

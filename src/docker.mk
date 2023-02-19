@@ -48,6 +48,11 @@ DOCKER_COMPOSE = docker-compose \
 	--file $(DOCKER_COMPOSE_YAML) \
 	--env-file $(DOCKER_ENV_FILE)
 
+ifneq (,$(wildcard $(DOCKER_ENV_FILE)))
+	include $(DOCKER_ENV_FILE)
+	export
+endif
+
 ifeq ("$(wildcard $(DOCKER_COMPOSE_YAML))","")
 	ERROR_DOCKER_COMPOSE_YAML = "\033[7;31mError! The file $(DOCKER_COMPOSE_YAML) not exists\033[0m"
 endif
@@ -73,8 +78,16 @@ check/docker-env-file:
 .PHONY: check/all-checks
 check/all-checks: check/docker-compose-file check/docker-env-file
 
+
+.PHONY: show-massage-after-start
+show-massage-after-start:
+ifneq (,$(SERVER_NAME))
+	@echo "\nThe site awailable in http://$(SERVER_NAME)\n"
+endif
+
 .PHONY: debug/variables
 debug/variables:
+	@printf "\n\033[1;37m"
 	@echo OS = ${OS}
 	@echo SHELL = ${SHELL}
 	@echo __UNAME = ${__UNAME}
@@ -84,6 +97,7 @@ debug/variables:
 	@echo PROJECT_NAME = ${PROJECT_NAME}
 	@echo DOCKER_COMPOSE_YAML = ${DOCKER_COMPOSE_YAML}
 	@echo DOCKER_COMPOSE = ${DOCKER_COMPOSE}
+	@printf "\033[0m"
 
 .PHONY: docker-init
 docker-init:
@@ -92,6 +106,8 @@ docker-init:
 .PHONY: docker-up
 docker-up: check/all-checks ## Start all docker containers. To only start one container, use SERVICE=<service>
 	@$(DOCKER_COMPOSE) up -d $(SERVICE)
+	@$(MAKE) -s debug/variables
+	@$(MAKE) -s show-massage-after-start
 
 .PHONY: docker-start
 docker-start: docker-up
@@ -111,12 +127,16 @@ docker-restart: docker-down  ## Restart all docker containers.
 docker-build: check/all-checks ## Build all docker images. Build a specific image by providing the service name via: make docker-build SERVICE=<service>
 	@$(DOCKER_COMPOSE) build --parallel $(SERVICE) && \
 	$(DOCKER_COMPOSE) up -d --force-recreate $(SERVICE)
+	@$(MAKE) -s debug/variables
+	@$(MAKE) -s show-massage-after-start
 
 .PHONY: docker-build-from-scratch
 docker-build-from-scratch: check/all-checks ## Build all docker images from scratch, without cache etc. Build a specific image by providing the service name via: make docker-build SERVICE=<service>
 	@$(DOCKER_COMPOSE) rm -fs $(SERVICE) && \
 	$(DOCKER_COMPOSE) build --pull --no-cache --parallel $(SERVICE) && \
 	$(DOCKER_COMPOSE) up -d --force-recreate $(SERVICE)
+	@$(MAKE) -s debug/variables
+	@$(MAKE) -s show-massage-after-start
 
 .PHONY: docker-clean
 docker-clean: ## Remove the .env file for docker

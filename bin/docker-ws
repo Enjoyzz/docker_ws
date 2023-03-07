@@ -1,10 +1,6 @@
 #!/usr/bin/env php
 <?php
 
-use Enjoys\DockerWs\Configurator\Configure;
-use Enjoys\DockerWs\Serve\DownCommand;
-use Enjoys\DockerWs\Serve\RestartCommand;
-use Enjoys\DockerWs\Serve\UpCommand;
 use Symfony\Component\Console\Application;
 
 if ('cli' !== PHP_SAPI) {
@@ -25,7 +21,10 @@ if (
     exit(1);
 }
 
-$application = new Application();
+$application = new Application(
+    'Docker Workspace Generator (docker-ws)',
+    sprintf('v%s', '0.7.0')
+);
 
 
 $application->addCommands([

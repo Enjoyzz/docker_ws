@@ -1,10 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use Enjoys\DockerWs\Configurator\Configure;
-use Enjoys\DockerWs\Serve\DownCommand;
-use Enjoys\DockerWs\Serve\RestartCommand;
-use Enjoys\DockerWs\Serve\UpCommand;
+use Enjoys\DockerWs\ConfigureCommand;
 use Symfony\Component\Console\Application;
 
 if ('cli' !== PHP_SAPI) {
@@ -25,11 +22,30 @@ if (
     exit(1);
 }
 
-$application = new Application();
+
+$version = @file_get_contents(__DIR__.'/../VERSION') ?: null;
+
+if ($version === null){
+    $version = json_decode(@file_get_contents(__DIR__.'/../composer.json'))->version;
+}
+
+if ($version === null){
+    $version = 'not detected';
+}
+
+if (str_starts_with($version, "v")) {
+    $version = substr($version, 1);
+}
+
+
+$application = new Application(
+    'Docker Workspace Generator (docker-ws)',
+    sprintf('%s', $version)
+);
 
 
 $application->addCommands([
-    new \Enjoys\DockerWs\ConfigureCommand('configure')
+    new ConfigureCommand('configure')
 ]);
 
 $application->run();

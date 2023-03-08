@@ -3,6 +3,7 @@
   "type": "library",
   "require": {
     "php": ">= 8.0",
+    "composer/semver": "^3.3",
     "symfony/console": ">=5.1",
     "enjoys/functions": "^2.4",
     "symfony/yaml": ">=5.1",

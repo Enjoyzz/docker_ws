@@ -8,6 +8,8 @@ RUN echo "${TZ}" && apk --update add tzdata && \
     echo $TZ > /etc/timezone && \
     apk del tzdata
 
+RUN apk add --no-cache make
+
 # Copy xdebug configuration for remote debugging
 COPY php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 

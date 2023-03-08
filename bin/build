@@ -9,17 +9,8 @@ define('__ROOT__', realpath(__DIR__ . '/..'));
 chdir(__ROOT__);
 
 $opt = getopt('v:', ['nozip']);
-//var_dump($opt);
 
-//$version = $opt['v'] ?? null;
-//if (empty($version)) {
-//    echo "Please, specify version as \"-v7.0.0-beta.42\".\n";
-//    exit(1);
-//}
-//if (!preg_match('/^\d+\.\d+\.\d+(\-\w+(\.\d+)?)?$/', $version)) {
-//    echo "Version must be \"7.0.0-beta.42\". Got \"$version\".\n";
-//    exit(1);
-//}
+`rm -rf ./vendor`;
 
 `composer install --no-dev --prefer-dist --optimize-autoloader`;
 

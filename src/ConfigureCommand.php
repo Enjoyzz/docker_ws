@@ -57,6 +57,7 @@ final class ConfigureCommand extends Command
             ->addOption('path', 'p', InputOption::VALUE_REQUIRED)
             ->addOption('force', 'f', InputOption::VALUE_NONE)
             ->addOption('confirm-configure', 'y', InputOption::VALUE_NONE)
+            ->addOption('allowed-version', null, InputOption::VALUE_OPTIONAL)
         ;
     }
 

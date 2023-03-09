@@ -10,6 +10,7 @@ use Composer\Semver\VersionParser;
 use Enjoys\DockerWs\Services\SelectableService;
 use Enjoys\DockerWs\Services\ServiceInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -31,39 +32,30 @@ final class Php extends Command implements SelectableService
 
     private ?ServiceInterface $service = null;
 
-    private function getAllowedVersion(string $user_allowed_version = null): array
+    private function getChoices(string $constraint = null): array
     {
-        if ($user_allowed_version === null) {
+        if ($constraint === null) {
             return self::PHP_VERSIONS;
         }
-        $phpConstraint = str_replace(
-            'php:',
-            '',
-            current(
-                array_filter(array_map('trim', explode(';', $user_allowed_version)), function ($item) {
-                    return str_starts_with($item, 'php:');
-                })
-            )
-        );
 
-        $result = array_filter(self::PHP_VERSIONS, function ($version) use ($phpConstraint) {
+        return array_filter(self::PHP_VERSIONS, function ($version) use ($constraint) {
             $versionParser = new VersionParser();
             $actualConstraint = $versionParser->parseConstraints($version);
-            $requiredConstraint = $versionParser->parseConstraints($phpConstraint);
+            $requiredConstraint = $versionParser->parseConstraints($constraint);
             return $actualConstraint->matches($requiredConstraint);
         });
-        return (empty($result)) ? self::PHP_VERSIONS : $result;
     }
 
 
     public function execute(InputInterface $input, OutputInterface $output): void
     {
-        $allowed_version = $this->getAllowedVersion($input->getOption('allowed-version'));
+        $choices = $this->getChoices($input->getOption('php'));
+        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
         $question = new ChoiceQuestion(
-            sprintf('Select PHP version (defaults to %s)', current($allowed_version)),
-            $allowed_version,
-            key($allowed_version)
+            sprintf('Select PHP version (defaults to %s)', current($choices)),
+            $choices,
+            key($choices)
         );
         $question->setErrorMessage('Php version %s is invalid.');
 

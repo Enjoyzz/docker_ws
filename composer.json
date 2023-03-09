@@ -20,7 +20,8 @@
       "bin/docker-ws"
   ],
   "require-dev": {
-    "symfony/var-dumper": "^6.0"
+    "symfony/var-dumper": "^6.0",
+    "vimeo/psalm": "^5.7"
   },
   "scripts": {
   }

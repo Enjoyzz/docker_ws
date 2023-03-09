@@ -2,7 +2,9 @@
 <?php
 
 if (ini_get('phar.readonly') === '1') {
-    throw new \Exception('Writing to phar files is disabled. Change your `php.ini` or append `-d phar.readonly=false` to the shebang, if supported by your `env` executable.');
+    throw new \Exception(
+        'Writing to phar files is disabled. Change your `php.ini` or append `-d phar.readonly=false` to the shebang, if supported by your `env` executable.'
+    );
 }
 
 define('__ROOT__', realpath(__DIR__ . '/..'));
@@ -10,9 +12,16 @@ chdir(__ROOT__);
 
 $opt = getopt('v:', ['nozip']);
 
-`rm -rf ./vendor`;
+if (
+    version_compare(PHP_VERSION, '8.0', '<')
+    || version_compare(PHP_VERSION, '8.1', '>=')
+) {
+    throw new \Exception('Run build in php version ~8.0.0');
+}
 
-`composer install --no-dev --prefer-dist --optimize-autoloader`;
+echo shell_exec(sprintf('%s -v', $_SERVER['_']));
+`rm -rf ./vendor`;
+shell_exec(sprintf('%s ./composer.phar update --no-dev --prefer-dist --optimize-autoloader', $_SERVER['_']));
 
 $pharName = "docker-ws.phar";
 $pharFile = __ROOT__ . '/' . $pharName;
@@ -53,8 +62,7 @@ foreach ($iterator as $fileInfo) {
                 echo "Could not compress File: $file\n";
             }
         }
-    }catch (\Throwable){
-
+    } catch (\Throwable) {
     }
 }
 
@@ -69,7 +77,8 @@ $depContent = str_replace("#!/usr/bin/env php\n", '', $depContent);
 $depContent = str_replace('__FILE__', 'str_replace("phar://", "", Phar::running())', $depContent);
 //$depContent = preg_replace("/run\('.+?'/", "run('$version'", $depContent);
 $phar->addFromString('bin/docker-ws', $depContent);
-$phar->setStub(<<<STUB
+$phar->setStub(
+    <<<STUB
 #!/usr/bin/env php
 <?php
 Phar::mapPhar('{$pharName}');

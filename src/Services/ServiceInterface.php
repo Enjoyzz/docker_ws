@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace Enjoys\DockerWs\Services;
 
 
-interface ServiceInterface
+interface ServiceInterface extends \Stringable
 {
 
     public function getConfiguration();

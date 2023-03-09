@@ -24,7 +24,7 @@ final class HttpServer extends Command implements SelectableService
         return $this->service;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $helper = $this->getHelper('question');
         $question = new ChoiceQuestion(

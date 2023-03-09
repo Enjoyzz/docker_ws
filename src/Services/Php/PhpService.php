@@ -22,6 +22,11 @@ final class PhpService implements ServiceInterface
         return 'php';
     }
 
+    public function __toString(): string
+    {
+        return $this->getType();
+    }
+
 
     private string $dependOnCondition = 'service_started';
 

@@ -23,7 +23,7 @@ final class Database extends Command implements SelectableService
 
     private ?ServiceInterface $service = null;
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $helper = $this->getHelper('question');
         $question = new ChoiceQuestion(
@@ -36,7 +36,7 @@ final class Database extends Command implements SelectableService
         );
         $question->setErrorMessage('%s is invalid.');
 
-        /** @var None|Versioned|\Enjoys\DockerWs\Configurator\ServiceInterface $service */
+        /** @var ServiceInterface|SelectableService $service */
         $service = $helper->ask($input, $output, $question);
 
         if ($service instanceof NullService) {
@@ -57,7 +57,7 @@ final class Database extends Command implements SelectableService
 
         $this->service = $service;
 
-        $output->writeln(sprintf('Chosen Database Server: <options=bold>%s %s</>', $dbname, $service));
+        $output->writeln(sprintf('Chosen Database Server: <options=bold>%s %s</>', $dbname, $this->service));
     }
 
 

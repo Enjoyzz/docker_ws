@@ -5,6 +5,8 @@ Generate workspace docker for **develop**
 Run application
 ```shell
 ./vendor/bin/docker-ws configure
+./vendor/bin/docker-ws configure --force
+./vendor/bin/docker-ws configure --php "^8.1"
 ```
 
 Get help information

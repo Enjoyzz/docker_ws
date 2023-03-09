@@ -21,7 +21,8 @@
   ],
   "require-dev": {
     "symfony/var-dumper": "^6.0",
-    "vimeo/psalm": "^5.7"
+    "vimeo/psalm": "^5.7",
+    "phpunit/phpunit": "^9.5"
   },
   "scripts": {
   }

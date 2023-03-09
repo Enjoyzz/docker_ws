@@ -105,7 +105,10 @@ final class Nginx implements ServiceInterface
     }
 
 
-    public function _after()
+    /**
+     * @throws \Exception
+     */
+    public function _after(): void
     {
         copyDirectoryWithFilesRecursive(
             __DIR__ . '/images',
@@ -115,7 +118,7 @@ final class Nginx implements ServiceInterface
         createDirectory(getenv('DOCKER_PATH') . '/.data/logs/nginx');
     }
 
-    public function _before()
+    public function _before(): void
     {
         $registeredServices = DockerCompose::getServices(true);
 

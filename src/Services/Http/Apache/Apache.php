@@ -15,7 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
-final class Apache extends Command implements SelectableService, \Stringable
+final class Apache extends Command implements SelectableService
 {
 
     private ?ServiceInterface $service = null;
@@ -32,7 +32,7 @@ final class Apache extends Command implements SelectableService, \Stringable
     }
 
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $helper = $this->getHelper('question');
         $question = new ChoiceQuestion(

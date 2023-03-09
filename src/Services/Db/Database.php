@@ -6,11 +6,7 @@ declare(strict_types=1);
 namespace Enjoys\DockerWs\Services\Db;
 
 
-use Enjoys\DockerWs\Configurator\Choice\Back;
-use Enjoys\DockerWs\Configurator\Choice\None;
-use Enjoys\DockerWs\Configurator\Versioned;
 use Enjoys\DockerWs\Services\NullService;
-use Enjoys\DockerWs\Services\Php\PhpService;
 use Enjoys\DockerWs\Services\SelectableService;
 use Enjoys\DockerWs\Services\ServiceInterface;
 use Symfony\Component\Console\Command\Command;
@@ -23,6 +19,9 @@ final class Database extends Command implements SelectableService
 
     private ?ServiceInterface $service = null;
 
+    /**
+     * @psalm-suppress ImplicitToStringCast
+     */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $helper = $this->getHelper('question');
@@ -43,7 +42,7 @@ final class Database extends Command implements SelectableService
             return;
         }
 
-        if ($service instanceof SelectableService) {
+        if ($service instanceof SelectableService && $service instanceof Command) {
             $dbname = $service->__toString();
             $service->setApplication($this->getApplication());
             $service->execute($input, $output);
@@ -65,5 +64,10 @@ final class Database extends Command implements SelectableService
     public function getSelectedService(): ?ServiceInterface
     {
         return $this->service;
+    }
+
+    public function __toString(): string
+    {
+        return 'Choose Database Server';
     }
 }

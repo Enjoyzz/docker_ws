@@ -51,7 +51,7 @@ final class ConfigureCommand extends Command
         parent::__construct($name);
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addOption('path', 'p', InputOption::VALUE_REQUIRED)
@@ -134,7 +134,7 @@ final class ConfigureCommand extends Command
     /**
      * @throws \Exception
      */
-    private function setRootPath(InputInterface $input, OutputInterface $output)
+    private function setRootPath(InputInterface $input, OutputInterface $output): void
     {
         $question = new Question(
             sprintf(
@@ -160,7 +160,7 @@ final class ConfigureCommand extends Command
     /**
      * @throws \Exception
      */
-    private function createDockerEnv(InputInterface $input, OutputInterface $output)
+    private function createDockerEnv(InputInterface $input, OutputInterface $output): void
     {
 
         $output->writeln([

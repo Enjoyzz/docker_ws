@@ -6,7 +6,6 @@ declare(strict_types=1);
 namespace Enjoys\DockerWs\Services\Http;
 
 
-use Enjoys\DockerWs\Configurator\Choice\None;
 use Enjoys\DockerWs\Services\NullService;
 use Enjoys\DockerWs\Services\SelectableService;
 use Enjoys\DockerWs\Services\ServiceInterface;
@@ -39,6 +38,7 @@ final class HttpServer extends Command implements SelectableService
         );
         $question->setErrorMessage('WebServer %s is invalid.');
 
+        /** @var ServiceInterface|SelectableService $service */
         $service = $helper->ask($input, $output, $question);
         $output->writeln('You have Webserver selected: ' . $service);
 
@@ -47,7 +47,7 @@ final class HttpServer extends Command implements SelectableService
             return;
         }
 
-        if ($service instanceof SelectableService) {
+        if ($service instanceof SelectableService  && $service instanceof Command) {
             $dbname = $service->__toString();
             $service->setApplication($this->getApplication());
             $service->execute($input, $output);
@@ -60,5 +60,10 @@ final class HttpServer extends Command implements SelectableService
         }
 
         $this->service = $service;
+    }
+
+    public function __toString(): string
+    {
+        return 'Choose Http Server';
     }
 }

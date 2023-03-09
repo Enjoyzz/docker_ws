@@ -3,7 +3,6 @@
 namespace Enjoys\DockerWs\Services\Db\Mysql;
 
 
-use Enjoys\DockerWs\Services\Db\Mysql\Back;
 use Enjoys\DockerWs\Services\Db\Mysql\Version;
 use Enjoys\DockerWs\Services\NullService;
 use Enjoys\DockerWs\Services\SelectableService;
@@ -13,7 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
-class Mysql extends Command implements SelectableService, \Stringable
+class Mysql extends Command implements SelectableService
 {
 
     private ?ServiceInterface $service = null;

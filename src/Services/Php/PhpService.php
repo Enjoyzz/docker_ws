@@ -82,7 +82,7 @@ final class PhpService implements ServiceInterface
     /**
      * @throws \Exception
      */
-    public function _after()
+    public function _after(): void
     {
         copyDirectoryWithFilesRecursive(
             __DIR__ . '/images',
@@ -92,7 +92,7 @@ final class PhpService implements ServiceInterface
         createDirectory(getenv('DOCKER_PATH') . '/.data/mail');
     }
 
-    public function _before()
+    public function _before(): void
     {
     }
 

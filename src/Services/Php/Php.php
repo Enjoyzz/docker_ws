@@ -72,4 +72,9 @@ final class Php extends Command implements SelectableService
     {
         $this->service = $service;
     }
+
+    public function __toString(): string
+    {
+        return 'Choose PHP Version';
+    }
 }

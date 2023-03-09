@@ -24,10 +24,6 @@ final class Php extends Command implements SelectableService
         '8.0',
         '7.4',
         '7.3',
-        '7.2',
-        '7.1',
-        '7.0',
-        '5.6'
     ];
 
     private ?ServiceInterface $service = null;

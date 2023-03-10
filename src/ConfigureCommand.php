@@ -31,9 +31,6 @@ use function Enjoys\FileSystem\writeFile;
 
 final class ConfigureCommand extends Command
 {
-    private FormatterHelper $helperFormatter;
-    private QuestionHelper $helperQuestion;
-
 
     private array $registeredCommands = [
         Php::class,
@@ -63,11 +60,13 @@ final class ConfigureCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $application = $this->getApplication();
-        $this->helperFormatter = $this->getHelper('formatter');
-        $this->helperQuestion = $this->getHelper('question');
+        /** @var FormatterHelper $helperFormatter */
+        $helperFormatter = $this->getHelper('formatter');
+        /** @var QuestionHelper $helperQuestion */
+        $helperQuestion = $this->getHelper('question');
 
         $output->writeln(
-            $this->helperFormatter->formatBlock(
+            $helperFormatter->formatBlock(
                 ['Docker workspace configuration'],
                 'bg=blue;fg=white',
                 true
@@ -77,7 +76,7 @@ final class ConfigureCommand extends Command
         if (!$input->getOption('confirm-configure')) {
             $question = new ConfirmationQuestion(' Configure docker workspace? [<comment>Y/n</comment>]: ', true);
 
-            if (false === $this->helperQuestion->ask($input, $output, $question)) {
+            if (false === $helperQuestion->ask($input, $output, $question)) {
                 return Command::SUCCESS;
             }
         }
@@ -87,7 +86,7 @@ final class ConfigureCommand extends Command
 
         if (!$input->getOption('force') && file_exists(getenv('DOCKER_PATH') . '/docker-compose.yml')) {
             $output->writeln(
-                $this->helperFormatter->formatBlock(
+                $helperFormatter->formatBlock(
                     ['Configuration is not possible, or delete the docker-compose.yml, or run the command with the --force flag'],
                     'bg=red;fg=white',
                     true
@@ -132,6 +131,8 @@ final class ConfigureCommand extends Command
      */
     private function setRootPath(InputInterface $input, OutputInterface $output): void
     {
+        /** @var QuestionHelper $helperQuestion */
+        $helperQuestion = $this->getHelper('question');
         $question = new Question(
             sprintf(
                 ' <info>%s</info> [<comment>%s</comment>]:',
@@ -141,7 +142,7 @@ final class ConfigureCommand extends Command
             getenv('ROOT_PATH') ?: './'
         );
 
-        createDirectory($rootPath = trim($this->helperQuestion->ask($input, $output, $question)));
+        createDirectory($rootPath = trim($helperQuestion->ask($input, $output, $question)));
         $rootPath = realpath($rootPath);
         if (!is_string($rootPath)) {
             throw new \RuntimeException('Invalid ROOT_PATH variable');
@@ -158,10 +159,13 @@ final class ConfigureCommand extends Command
      */
     private function createDockerEnv(InputInterface $input, OutputInterface $output): void
     {
-
+        /** @var FormatterHelper $helperFormatter */
+        $helperFormatter = $this->getHelper('formatter');
+        /** @var QuestionHelper $helperQuestion */
+        $helperQuestion = $this->getHelper('question');
         $output->writeln([
                 '',
-                $this->helperFormatter->formatBlock(
+                $helperFormatter->formatBlock(
                     ['Setup variables used docker-compose.yml...'],
                     'options=bold',
                 )
@@ -196,7 +200,7 @@ final class ConfigureCommand extends Command
             $question->setValidator($env->getValidator());
             $question->setNormalizer($env->getNormalizer());
 
-            $envValue = $this->helperQuestion->ask($input, $output, $question);
+            $envValue = $helperQuestion->ask($input, $output, $question);
 
             if ($envValue === null) {
                 continue;
@@ -211,6 +215,7 @@ final class ConfigureCommand extends Command
         InputInterface $input,
         OutputInterface $output
     ): void {
+        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         $output->writeln(['']);

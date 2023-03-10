@@ -20,10 +20,10 @@ jobs:
         run: php -v
 
       - name: Get version
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
+        run: echo ${{ github.event.release.tag_name }}
 
       - name: Build phar
-        run: php -d phar.readonly=0 bin/build -v"$RELEASE_VERSION"
+        run: php -d phar.readonly=0 bin/build -v"${{ github.event.release.tag_name }}"
 
       - name: Verify version
         run: php docker-ws.phar -V

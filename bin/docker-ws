@@ -22,25 +22,9 @@ if (
     exit(1);
 }
 
-
-$version = @file_get_contents(__DIR__.'/../VERSION') ?: null;
-
-if ($version === null){
-    $version = json_decode(@file_get_contents(__DIR__.'/../composer.json'))->version;
-}
-
-if ($version === null){
-    $version = 'not detected';
-}
-
-if (str_starts_with($version, "v")) {
-    $version = substr($version, 1);
-}
-
-
 $application = new Application(
     'Docker Workspace Generator (docker-ws)',
-    sprintf('%s', $version)
+    sprintf('%s', 'master')
 );
 
 

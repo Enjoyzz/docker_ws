@@ -7,7 +7,7 @@ PHP_BIN ?= 'php'
 
 .PHONY: build
 build: ## Build docker-ws.phar
-	$(PHP_BIN) -d phar.readonly=false bin/build
+	$(PHP_BIN) -d phar.readonly=false bin/build -v$(V)
 
 
 

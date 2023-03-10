@@ -21,7 +21,7 @@ jobs:
 
       - name: Build phar
 #        run: php -d phar.readonly=0 bin/build -v"$RELEASE_VERSION"
-        run: php -d phar.readonly=0 bin/build -v0.11.0-beta"
+        run: php -d phar.readonly=0 bin/build -v0.11.0-beta
 
       - name: Verify version
         run: php docker-ws.phar -V

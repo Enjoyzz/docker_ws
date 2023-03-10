@@ -1,6 +1,7 @@
 {
   "name": "enjoys/docker_ws",
-  "type": "library",
+  "type": "utilite",
+  "description": "Generate docker workspace",
   "require": {
     "php": "^8.0",
     "composer/semver": "^3.3",

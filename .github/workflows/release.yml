@@ -29,7 +29,7 @@ jobs:
         run: php docker-ws.phar -V
 
       - name: Upload phar
-        run: gh release upload v"${{ github.event.release.tag_name }}" docker-ws.phar
+        run: gh release upload ${{ github.event.release.tag_name }} docker-ws.phar
         env:
           GH_TOKEN: ${{ github.token }}
 

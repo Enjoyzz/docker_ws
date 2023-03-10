@@ -9,7 +9,9 @@ PHP_BIN ?= 'php'
 build: ## Build docker-ws.phar
 	$(PHP_BIN) -d phar.readonly=false bin/build -v$(V)
 
-
+.PHONY: check-version
+check-version: ## Get version docker-ws.phar
+	@$(PHP_BIN) ./docker-ws.phar -V
 
 
 

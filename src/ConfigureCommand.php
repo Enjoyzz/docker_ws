@@ -17,7 +17,6 @@ use Enjoys\DockerWs\Services\Php\PhpService;
 use Enjoys\DockerWs\Services\SelectableService;
 use Enjoys\DockerWs\Services\ServiceInterface;
 use Enjoys\DotenvWriter\DotenvWriter;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -26,9 +25,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
-
 use function Enjoys\FileSystem\createDirectory;
-use function Enjoys\FileSystem\makeSymlink;
 use function Enjoys\FileSystem\removeDirectoryRecursive;
 use function Enjoys\FileSystem\writeFile;
 
@@ -43,7 +40,6 @@ final class ConfigureCommand extends Command
         HttpServer::class,
         Database::class
     ];
-    private Application $application;
 
 
     public function __construct(string $name = null)
@@ -66,7 +62,7 @@ final class ConfigureCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->application = $this->getApplication();
+        $application = $this->getApplication();
         $this->helperFormatter = $this->getHelper('formatter');
         $this->helperQuestion = $this->getHelper('question');
 
@@ -112,7 +108,7 @@ final class ConfigureCommand extends Command
                     sprintf('%s must be implement %s', $command::class, SelectableService::class)
                 );
             }
-            $command->setApplication($this->application);
+            $command->setApplication($application);
             $command->execute($input, $output);
 
             DockerCompose::addService($command->getSelectedService());
@@ -246,11 +242,14 @@ final class ConfigureCommand extends Command
     {
         writeFile(
             getenv('DOCKER_PATH') . '/docker-compose.yml',
-            \Enjoys\DockerWs\DockerCompose::build()
+            DockerCompose::build()
         );
     }
 
-    private function writeDockerServicesSummary()
+    /**
+     * @throws \Exception
+     */
+    private function writeDockerServicesSummary(): void
     {
         $services = [];
         foreach (DockerCompose::getServices() as $serviceClassString => $service) {

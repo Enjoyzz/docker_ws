@@ -29,10 +29,7 @@ jobs:
         run: php docker-ws.phar -V
 
       - name: Upload phar
-        run: gh release upload v"$RELEASE_VERSION" docker-ws.phar
+        run: gh release upload v"${{ github.event.release.tag_name }}" docker-ws.phar
         env:
-          GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
-
-      - name: Calculate sha1
-        run: echo "SHA1=$(sha1sum docker-ws.phar | awk '{print $1;}')" >> $GITHUB_ENV
+          GH_TOKEN: ${{ github.token }}
 

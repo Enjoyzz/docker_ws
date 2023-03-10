@@ -7,6 +7,8 @@ PHP_BIN ?= 'php'
 
 .PHONY: build
 build: ## Build docker-ws.phar
+	@rm -rf ./vendor
+	@rm -f ./composer.lock
 	$(PHP_BIN) -d phar.readonly=false bin/build -v$(V)
 
 .PHONY: check-version

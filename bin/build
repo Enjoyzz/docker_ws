@@ -28,10 +28,9 @@ if (
     throw new \Exception('Run build in php version ~8.0.0');
 }
 
-echo shell_exec(sprintf('%s -v', PHP_BINARY));
-`rm -rf ./vendor`;
-`rm -f ./composer.lock`;
-shell_exec(sprintf('%s composer install --no-dev --prefer-dist --optimize-autoloader', PHP_BINARY));
+
+$COMPOSER_BIN = trim(shell_exec('which composer'));
+echo shell_exec(sprintf('%s %s install --no-dev --prefer-dist --optimize-autoloader', PHP_BINARY, $COMPOSER_BIN));
 
 $pharName = "docker-ws.phar";
 $pharFile = __ROOT__ . '/' . $pharName;

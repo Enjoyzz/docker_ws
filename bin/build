@@ -31,7 +31,7 @@ if (
 echo shell_exec(sprintf('%s -v', PHP_BINARY));
 `rm -rf ./vendor`;
 `rm -f ./composer.lock`;
-shell_exec(sprintf('%s ./composer.phar install --no-dev --prefer-dist --optimize-autoloader', PHP_BINARY));
+shell_exec(sprintf('%s composer install --no-dev --prefer-dist --optimize-autoloader', PHP_BINARY));
 
 $pharName = "docker-ws.phar";
 $pharFile = __ROOT__ . '/' . $pharName;

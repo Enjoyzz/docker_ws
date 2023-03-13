@@ -48,7 +48,7 @@ final class PhpService implements ServiceInterface
             ]
         ],
         'volumes' => [
-            '/.data/mail:/home/mail',
+            './.data/mail:/home/mail',
             './..:${WORK_DIR}',
         ],
         'ports' => [

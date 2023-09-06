@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace Enjoys\DockerWs\Services\Db;
 
 
+use Enjoys\DockerWs\Services\Db\PostgreSQL;
 use Enjoys\DockerWs\Services\NullService;
 use Enjoys\DockerWs\Services\SelectableService;
 use Enjoys\DockerWs\Services\ServiceInterface;
@@ -31,7 +32,8 @@ final class Database extends Command implements SelectableService
             'Select Database server (defaults to none)',
             [
                 new NullService(),
-                new Mysql\Mysql()
+                new Mysql\Mysql(),
+                new PostgreSQL\PostgreSQL()
             ],
             0
         );

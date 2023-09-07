@@ -1,8 +1,8 @@
 <?php
 
-namespace Enjoys\DockerWs\Utils;
+namespace Enjoys\DockerWs;
 
-class NetworkParser
+class Utils
 {
 
     public static function collectNetworksFromServices(array $services): array

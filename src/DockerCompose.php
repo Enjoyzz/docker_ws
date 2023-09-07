@@ -8,7 +8,6 @@ namespace Enjoys\DockerWs;
 
 use Enjoys\DockerWs\Services\NullService;
 use Enjoys\DockerWs\Services\ServiceInterface;
-use Enjoys\DockerWs\Utils\NetworkParser;
 use Symfony\Component\Yaml\Yaml;
 
 final class DockerCompose
@@ -40,7 +39,7 @@ final class DockerCompose
             return Yaml::dump(
                 array_merge(
                     ['version' => self::$version],
-                    ['networks' => NetworkParser::collectNetworksFromServices($services)],
+                    ['networks' => Utils::collectNetworksFromServices($services)],
                     ['services' => $services]
                 ),
                 6,

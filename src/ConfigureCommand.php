@@ -9,6 +9,11 @@ namespace Enjoys\DockerWs;
 use Enjoys\DockerWs\Services\Db\Database;
 use Enjoys\DockerWs\Services\Db\Mysql\Version\Mysql57;
 use Enjoys\DockerWs\Services\Db\Mysql\Version\Mysql80;
+use Enjoys\DockerWs\Services\Db\PostgreSQL\Version\PostgreSQL11;
+use Enjoys\DockerWs\Services\Db\PostgreSQL\Version\PostgreSQL12;
+use Enjoys\DockerWs\Services\Db\PostgreSQL\Version\PostgreSQL13;
+use Enjoys\DockerWs\Services\Db\PostgreSQL\Version\PostgreSQL14;
+use Enjoys\DockerWs\Services\Db\PostgreSQL\Version\PostgreSQL15;
 use Enjoys\DockerWs\Services\Db\SQLite\SQlite;
 use Enjoys\DockerWs\Services\Http\Apache\Version\Apache_v2_4;
 use Enjoys\DockerWs\Services\Http\HttpServer;
@@ -269,6 +274,11 @@ final class ConfigureCommand extends Command
                 case Mysql57::class:
                 case Mysql80::class:
                 case SQlite::class:
+                case PostgreSQL11::class:
+                case PostgreSQL12::class:
+                case PostgreSQL13::class:
+                case PostgreSQL14::class:
+                case PostgreSQL15::class:
                     $services['db'] = [
                         'service_name' => $service->getServiceName(),
                         'type' => $service->getType()

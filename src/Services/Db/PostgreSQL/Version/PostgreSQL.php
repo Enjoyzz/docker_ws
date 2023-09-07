@@ -13,7 +13,7 @@ use function Enjoys\FileSystem\createDirectory;
 
 abstract class PostgreSQL implements ServiceInterface
 {
-    protected string $serviceName = 'postgresql';
+    protected string $serviceName = 'postgres';
 
 
     protected string $dependOnCondition = 'service_healthy';
@@ -25,7 +25,7 @@ abstract class PostgreSQL implements ServiceInterface
 
     public function getType(): string
     {
-        return 'postgresql';
+        return 'postgres';
     }
 
     protected array $USED_ENV = [

@@ -28,15 +28,17 @@ final class HttpServer extends Command implements SelectableService
     {
         /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
+        $choices =   [
+            new NullService(),
+            new Nginx\Nginx(),
+            new Apache\Apache()
+        ];
+        $default = 1;
         $question = new ChoiceQuestion(
-            'Select WebServer(defaults to none)',
+            sprintf('Select WebServer (defaults to %s)', $choices[$default]),
             // choices can also be PHP objects that implement __toString() method
-            [
-                new NullService(),
-                new Nginx\Nginx(),
-                new Apache\Apache()
-            ],
-            2
+            $choices,
+            $default
         );
         $question->setErrorMessage('WebServer %s is invalid.');
 

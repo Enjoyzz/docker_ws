@@ -9,6 +9,7 @@ namespace Enjoys\DockerWs;
 use Enjoys\DockerWs\Services\Db\Database;
 use Enjoys\DockerWs\Services\Db\Mysql\Version\Mysql57;
 use Enjoys\DockerWs\Services\Db\Mysql\Version\Mysql80;
+use Enjoys\DockerWs\Services\Db\SQLite\SQlite;
 use Enjoys\DockerWs\Services\Http\Apache\Version\Apache_v2_4;
 use Enjoys\DockerWs\Services\Http\HttpServer;
 use Enjoys\DockerWs\Services\Http\Nginx\Nginx;
@@ -267,6 +268,7 @@ final class ConfigureCommand extends Command
                     break;
                 case Mysql57::class:
                 case Mysql80::class:
+                case SQlite::class:
                     $services['db'] = [
                         'service_name' => $service->getServiceName(),
                         'type' => $service->getType()

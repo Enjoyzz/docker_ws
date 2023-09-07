@@ -6,20 +6,22 @@ declare(strict_types=1);
 namespace Enjoys\DockerWs\Services;
 
 
-final class NullService implements ServiceInterface
+class NullService implements ServiceInterface
 {
 
 
     private string $serviceName;
+    private string $type;
 
-    public function __construct(string $serviceName = 'none')
+    public function __construct(string $serviceName = 'none', string $type = '')
     {
         $this->serviceName = $serviceName;
+        $this->type = $type;
     }
 
     public function getType(): string
     {
-        return '';
+        return $this->type;
     }
 
     public function __toString(): string
@@ -27,8 +29,9 @@ final class NullService implements ServiceInterface
         return $this->serviceName;
     }
 
-    public function getConfiguration()
+    public function getConfiguration(): array
     {
+        return [];
     }
 
     public function _after()
@@ -52,6 +55,7 @@ final class NullService implements ServiceInterface
 
     public function setServiceName(string $serviceName): void
     {
+        $this->serviceName = $serviceName;
     }
 
     private string $dependOnCondition = 'service_started';

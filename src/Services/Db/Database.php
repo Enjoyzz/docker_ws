@@ -7,6 +7,7 @@ namespace Enjoys\DockerWs\Services\Db;
 
 
 use Enjoys\DockerWs\Services\Db\PostgreSQL;
+use Enjoys\DockerWs\Services\Db\SQLite\SQlite;
 use Enjoys\DockerWs\Services\NullService;
 use Enjoys\DockerWs\Services\SelectableService;
 use Enjoys\DockerWs\Services\ServiceInterface;
@@ -28,21 +29,24 @@ final class Database extends Command implements SelectableService
     {
         /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
+        $choices = [
+            new NullService(),
+            new SQlite(),
+            new Mysql\Mysql(),
+            new PostgreSQL\PostgreSQL()
+        ];
+        $default = 1;
         $question = new ChoiceQuestion(
-            'Select Database server (defaults to none)',
-            [
-                new NullService(),
-                new Mysql\Mysql(),
-                new PostgreSQL\PostgreSQL()
-            ],
-            0
+            sprintf('Select Database server (defaults to %s)', $choices[$default]),
+            $choices,
+            $default
         );
         $question->setErrorMessage('%s is invalid.');
 
         /** @var ServiceInterface|SelectableService $service */
         $service = $helper->ask($input, $output, $question);
 
-        if ($service instanceof NullService) {
+        if ($service::class === NullService::class) {
             return;
         }
 
@@ -60,7 +64,7 @@ final class Database extends Command implements SelectableService
 
         $this->service = $service;
 
-        $output->writeln(sprintf('Chosen Database Server: <options=bold>%s %s</>', $dbname, $this->service));
+        $output->writeln(sprintf('Chosen Database Server: <options=bold>%s %s</>', $dbname ?? '', $this->service));
     }
 
 

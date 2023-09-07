@@ -61,6 +61,7 @@ abstract class PostgreSQL implements ServiceInterface
         ],
         'networks' => [
             'backend',
+            'postgres'
         ],
 
     ];

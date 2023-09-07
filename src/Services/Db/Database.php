@@ -29,6 +29,7 @@ final class Database extends Command implements SelectableService
     {
         /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
+        /** @var ServiceInterface[]|SelectableService[] $choices */
         $choices = [
             new NullService(),
             new SQlite(),
@@ -37,7 +38,7 @@ final class Database extends Command implements SelectableService
         ];
         $default = 1;
         $question = new ChoiceQuestion(
-            sprintf('Select Database server (defaults to %s)', $choices[$default]),
+            sprintf('Select Database server (defaults to %s)', $choices[$default]?->__toString()),
             $choices,
             $default
         );

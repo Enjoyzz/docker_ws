@@ -28,6 +28,7 @@ final class HttpServer extends Command implements SelectableService
     {
         /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
+        /** @var ServiceInterface[]|SelectableService[] $choices */
         $choices =   [
             new NullService(),
             new Nginx\Nginx(),
@@ -35,7 +36,7 @@ final class HttpServer extends Command implements SelectableService
         ];
         $default = 1;
         $question = new ChoiceQuestion(
-            sprintf('Select WebServer (defaults to %s)', $choices[$default]),
+            sprintf('Select WebServer (defaults to %s)', $choices[$default]?->__toString()),
             // choices can also be PHP objects that implement __toString() method
             $choices,
             $default

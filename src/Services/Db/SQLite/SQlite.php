@@ -6,9 +6,14 @@ use Enjoys\DockerWs\Services\NullService;
 
 class SQlite extends NullService
 {
-    public function __construct(string $serviceName = 'Sqlite', string $type = 'sqlite')
+    public function __construct(string $serviceName = 'sqlite', string $type = 'sqlite')
     {
         parent::__construct($serviceName, $type);
+    }
+
+    public function __toString(): string
+    {
+        return 'SQLite';
     }
 
 }

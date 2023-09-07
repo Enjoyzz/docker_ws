@@ -45,7 +45,13 @@ final class HttpServer extends Command implements SelectableService
 
         /** @var ServiceInterface|SelectableService $service */
         $service = $helper->ask($input, $output, $question);
-        $output->writeln('You have Webserver selected: ' . $service);
+
+        $output->writeln([
+            '',
+            sprintf('Chosen Webserver: <options=bold;fg=yellow>%s</>', $service),
+            '',
+        ]);
+
 
 
         if ($service instanceof NullService) {

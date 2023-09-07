@@ -56,7 +56,12 @@ final class Php extends Command implements SelectableService
         $question->setErrorMessage('Php version %s is invalid.');
 
         $phpVersion = $helper->ask($input, $output, $question);
-        $output->writeln('Selected php version: ' . $phpVersion);
+        $output->writeln([
+            '',
+            sprintf('Chosen PHP Version: <options=bold;fg=yellow>%s</>', $phpVersion),
+            '',
+        ]);
+
         $service = new PhpService($phpVersion);
         $this->setService($service);
     }

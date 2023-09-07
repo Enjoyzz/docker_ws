@@ -6,7 +6,6 @@ declare(strict_types=1);
 namespace Enjoys\DockerWs\Services\Db;
 
 
-use Enjoys\DockerWs\Services\Db\PostgreSQL;
 use Enjoys\DockerWs\Services\Db\SQLite\SQlite;
 use Enjoys\DockerWs\Services\NullService;
 use Enjoys\DockerWs\Services\SelectableService;
@@ -65,9 +64,12 @@ final class Database extends Command implements SelectableService
 
         $this->service = $service;
 
-        $output->writeln(sprintf('Chosen Database Server: <options=bold>%s %s</>', $dbname ?? '', $this->service));
+        $output->writeln([
+            '',
+            sprintf('Chosen Database Server: <options=bold;fg=yellow>%s %s</>', $dbname ?? '', $this->service),
+            '',
+        ]);
     }
-
 
 
     public function getSelectedService(): ?ServiceInterface

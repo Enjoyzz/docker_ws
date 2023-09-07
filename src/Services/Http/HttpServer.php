@@ -48,7 +48,7 @@ final class HttpServer extends Command implements SelectableService
 
         $output->writeln([
             '',
-            sprintf('Chosen Webserver: <options=bold;fg=yellow>%s</>', $service),
+            sprintf('Chosen Webserver: <options=bold;fg=yellow>%s</>', $service->__toString()),
             '',
         ]);
 

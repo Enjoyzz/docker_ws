@@ -40,7 +40,10 @@ class PostgreSQL extends Command implements SelectableService
             [
                 new NullService('back'),
                 new Version\PostgreSQL11(),
+                new Version\PostgreSQL12(),
+                new Version\PostgreSQL13(),
                 new Version\PostgreSQL14(),
+                new Version\PostgreSQL15(),
             ],
             0
         );

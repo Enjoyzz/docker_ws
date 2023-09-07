@@ -12,15 +12,7 @@ use Symfony\Component\Yaml\Yaml;
 
 final class DockerCompose
 {
-    private static array $version = [
-        'version' => '3.7'
-    ];
-
-    private static array $networks = [
-        'networks' => [
-            'backend' => []
-        ]
-    ];
+    private static string $version = '3.7';
 
     /**
      * @var ServiceInterface[]
@@ -29,7 +21,7 @@ final class DockerCompose
 
     public static function addService(?ServiceInterface $service): void
     {
-        if ($service instanceof NullService || $service === null) {
+        if ($service::class === NullService::class || $service === null) {
             return;
         }
         self::$services[$service::class] = $service;
@@ -42,11 +34,13 @@ final class DockerCompose
                 $service->_before();
             }
 
+            $services = self::prepareComposeServices(self::$services);
+
             return Yaml::dump(
                 array_merge(
-                    self::$version,
-                    self::$networks,
-                    ['services' => self::prepareComposeServices(self::$services)]
+                    ['version' => self::$version],
+                    ['networks' => Utils::collectNetworksFromServices($services)],
+                    ['services' => $services]
                 ),
                 6,
                 2,

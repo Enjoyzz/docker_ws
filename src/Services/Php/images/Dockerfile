@@ -17,6 +17,8 @@ COPY php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY php/php.ini /usr/local/etc/php/conf.d/40-custom.ini
 COPY php/sendmail /usr/local/bin
 
+RUN chmod +x /usr/local/bin/sendmail
+
 ARG __UNAME
 ARG __UID
 RUN echo ${__UNAME}:${__UID}

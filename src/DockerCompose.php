@@ -61,7 +61,11 @@ final class DockerCompose
     {
         $result = [];
         foreach ($services as $service) {
-            $result[$service->getServiceName()] = $service->getConfiguration();
+            $configuration = $service->getConfiguration();
+            if ($configuration === []){
+                continue;
+            }
+            $result[$service->getServiceName()] = $configuration;
         }
         return $result;
     }

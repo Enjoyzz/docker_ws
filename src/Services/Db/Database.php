@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace Enjoys\DockerWs\Services\Db;
 
 
-use Enjoys\DockerWs\Services\Db\SQLite\SQlite;
+use Enjoys\DockerWs\Services\Db\SQLite\SQLite;
 use Enjoys\DockerWs\Services\NullService;
 use Enjoys\DockerWs\Services\SelectableService;
 use Enjoys\DockerWs\Services\ServiceInterface;
@@ -31,7 +31,7 @@ final class Database extends Command implements SelectableService
         /** @var ServiceInterface[]|SelectableService[] $choices */
         $choices = [
             new NullService(),
-            new SQlite(),
+            new SQLite(),
             new Mysql\Mysql(),
             new PostgreSQL\PostgreSQL()
         ];

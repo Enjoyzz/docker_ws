@@ -14,7 +14,7 @@ use Enjoys\DockerWs\Services\Db\PostgreSQL\Version\PostgreSQL12;
 use Enjoys\DockerWs\Services\Db\PostgreSQL\Version\PostgreSQL13;
 use Enjoys\DockerWs\Services\Db\PostgreSQL\Version\PostgreSQL14;
 use Enjoys\DockerWs\Services\Db\PostgreSQL\Version\PostgreSQL15;
-use Enjoys\DockerWs\Services\Db\SQLite\SQlite;
+use Enjoys\DockerWs\Services\Db\SQLite\SQLite;
 use Enjoys\DockerWs\Services\Http\Apache\Version\Apache_v2_4;
 use Enjoys\DockerWs\Services\Http\HttpServer;
 use Enjoys\DockerWs\Services\Http\Nginx\Nginx;
@@ -273,7 +273,7 @@ final class ConfigureCommand extends Command
                     break;
                 case Mysql57::class:
                 case Mysql80::class:
-                case SQlite::class:
+                case SQLite::class:
                 case PostgreSQL11::class:
                 case PostgreSQL12::class:
                 case PostgreSQL13::class:

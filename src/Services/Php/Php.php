@@ -30,7 +30,7 @@ final class Php extends Command implements SelectableService
 
     private ?ServiceInterface $service = null;
 
-    private function getChoices(string $constraint = null): array
+    private function getChoices(?string $constraint = null): array
     {
         if ($constraint === null) {
             return self::PHP_VERSIONS;

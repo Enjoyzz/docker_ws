@@ -48,7 +48,7 @@ final class Database extends Command implements SelectableService
         $service = $helper->ask($input, $output, $question);
 
         if ($service::class === NullService::class) {
-            return;
+            return Command::SUCCESS;
         }
 
         if ($service instanceof SelectableService && $service instanceof Command) {
@@ -58,8 +58,7 @@ final class Database extends Command implements SelectableService
             $service = $service->getSelectedService();
 
             if ($service instanceof NullService && $service->getServiceName() === 'back') {
-                $this->execute($input, $output);
-                return;
+                return $this->execute($input, $output);
             }
         }
 
@@ -70,6 +69,8 @@ final class Database extends Command implements SelectableService
             sprintf('Chosen Database Server: <options=bold;fg=yellow>%s %s</>', $dbname ?? '', $this->service),
             '',
         ]);
+
+        return Command::SUCCESS;
     }
 
 

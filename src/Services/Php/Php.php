@@ -67,6 +67,7 @@ final class Php extends Command implements SelectableService
 
         $service = new PhpService($phpVersion);
         $this->setService($service);
+        return Command::SUCCESS;
     }
 
 

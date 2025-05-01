@@ -55,7 +55,7 @@ final class HttpServer extends Command implements SelectableService
 
 
         if ($service instanceof NullService) {
-            return;
+            return Command::SUCCESS;
         }
 
         if ($service instanceof SelectableService && $service instanceof Command) {
@@ -65,12 +65,13 @@ final class HttpServer extends Command implements SelectableService
             $service = $service->getSelectedService();
 
             if ($service instanceof NullService && $service->getServiceName() === 'back') {
-                $this->execute($input, $output);
-                return;
+                return $this->execute($input, $output);
             }
         }
 
         $this->service = $service;
+
+        return Command::SUCCESS;
     }
 
     public function __toString(): string

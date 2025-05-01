@@ -9,6 +9,7 @@ namespace Enjoys\DockerWs\Services\Http;
 use Enjoys\DockerWs\Services\NullService;
 use Enjoys\DockerWs\Services\SelectableService;
 use Enjoys\DockerWs\Services\ServiceInterface;
+use Override;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,12 +25,12 @@ final class HttpServer extends Command implements SelectableService
         return $this->service;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    #[Override] protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
         /** @var ServiceInterface[]|SelectableService[] $choices */
-        $choices =   [
+        $choices = [
             new NullService(),
             new Nginx\Nginx(),
             new Apache\Apache()
@@ -53,12 +54,11 @@ final class HttpServer extends Command implements SelectableService
         ]);
 
 
-
         if ($service instanceof NullService) {
             return;
         }
 
-        if ($service instanceof SelectableService  && $service instanceof Command) {
+        if ($service instanceof SelectableService && $service instanceof Command) {
             $dbname = $service->__toString();
             $service->setApplication($this->getApplication());
             $service->execute($input, $output);

@@ -10,6 +10,7 @@ use Enjoys\DockerWs\Services\Db\SQLite\SQLite;
 use Enjoys\DockerWs\Services\NullService;
 use Enjoys\DockerWs\Services\SelectableService;
 use Enjoys\DockerWs\Services\ServiceInterface;
+use Override;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,7 +25,7 @@ final class Database extends Command implements SelectableService
     /**
      * @psalm-suppress ImplicitToStringCast
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    #[Override] protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');

@@ -9,6 +9,7 @@ namespace Enjoys\DockerWs\Services\Php;
 use Composer\Semver\VersionParser;
 use Enjoys\DockerWs\Services\SelectableService;
 use Enjoys\DockerWs\Services\ServiceInterface;
+use Override;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -45,7 +46,7 @@ final class Php extends Command implements SelectableService
     }
 
 
-    public function execute(InputInterface $input, OutputInterface $output): void
+    #[Override] public function execute(InputInterface $input, OutputInterface $output): int
     {
         $choices = $this->getChoices($input->getOption('php'));
         /** @var QuestionHelper $helper */

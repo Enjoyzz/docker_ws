@@ -2,16 +2,18 @@
 Generate workspace docker for **develop**
 ### _don't use this configuration on production_
 
+```curl -LO https://github.com/Enjoyzz/docker_ws/releases/latest/download/docker-ws.phar```
+
 Run application
 ```shell
-./vendor/bin/docker-ws configure
-./vendor/bin/docker-ws configure --force
-./vendor/bin/docker-ws configure --php "^8.1"
+php docker-ws.phar configure
+php docker-ws.phar configure --force
+php docker-ws.phar configure --php "^8.1"
 ```
 
 Get help information
 ```shell
-./vendor/bin/docker-ws configure --help
+php docker-ws.phar configure --help
 ```
 
 Linux
@@ -27,6 +29,11 @@ docker-compose --file .docker/docker-compose.yml  up --build --remove-orphans -d
 add to root Makefile 
 ```makefile
 -include .docker/Makefile
+
+.PHONY: configure-docker
+configure-docker: ## Configure docker workspace.
+	@$(if $(PHAR_NOT_EXIST), curl -LO https://github.com/Enjoyzz/docker_ws/releases/latest/download/docker-ws.phar)
+	@php ./docker-ws.phar configure --php "^8.1"
 ```
 and run for show all targets (commands)
 ```shell

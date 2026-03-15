@@ -12,8 +12,6 @@ use Symfony\Component\Yaml\Yaml;
 
 final class DockerCompose
 {
-    private static string $version = '3.7';
-
     /**
      * @var ServiceInterface[]
      */
@@ -38,7 +36,7 @@ final class DockerCompose
 
             return Yaml::dump(
                 array_merge(
-                    ['version' => self::$version],
+                    //['version' => '3.7'],
                     ['networks' => Utils::collectNetworksFromServices($services)],
                     ['services' => $services]
                 ),

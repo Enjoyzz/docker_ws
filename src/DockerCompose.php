@@ -21,7 +21,7 @@ final class DockerCompose
 
     public static function addService(?ServiceInterface $service): void
     {
-        if ($service::class === NullService::class || $service === null) {
+        if ($service === null || $service::class === NullService::class) {
             return;
         }
         self::$services[$service::class] = $service;
